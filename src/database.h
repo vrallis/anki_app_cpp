@@ -26,6 +26,7 @@ public:
     void addFirstUser();
     void addUser(const User& user);
     bool hasUsers();
+    bool isDatabaseInitialized();
 
 private:
     sqlite3* db;

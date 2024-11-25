@@ -3,14 +3,18 @@
 #include <filesystem>
 
 Database::Database(const std::string& db_name) {
+    // Check if the database file exists
     bool dbExists = std::filesystem::exists(db_name);
 
+    // Open the SQLite database
     if (sqlite3_open(db_name.c_str(), &db)) {
         std::cerr << "Failed to open database: " << sqlite3_errmsg(db) << std::endl;
         db = nullptr;
     } else {
         std::cout << "Database opened successfully!" << std::endl;
-        if (!dbExists) {
+
+        if (!dbExists || !isDatabaseInitialized()) {
+            std::cout << "First-time setup detected. Initializing database..." << std::endl;
             initialize();
         }
     }
@@ -108,3 +112,15 @@ void Database::addUser(const User& user) {
     }
     sqlite3_finalize(stmt);
 }
+
+bool Database::isDatabaseInitialized() {
+    const char* sql = "SELECT name FROM sqlite_master WHERE type='table' AND name='users';";
+    sqlite3_stmt* stmt;
+
+    sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
+    bool initialized = sqlite3_step(stmt) == SQLITE_ROW;
+    sqlite3_finalize(stmt);
+
+    return initialized;
+}
+
