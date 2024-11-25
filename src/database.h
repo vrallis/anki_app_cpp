@@ -3,19 +3,7 @@
 
 #include <string>
 #include <sqlite3.h>
-
-class User {
-public:
-    User(const std::string& username, const std::string& password)
-        : username(username), password(password) {}
-
-    const std::string& getUsername() const { return username; }
-    const std::string& getPassword() const { return password; }
-
-private:
-    std::string username;
-    std::string password;
-};
+#include "user.h"
 
 class Database {
 public:
@@ -23,15 +11,27 @@ public:
     ~Database();
 
     void initialize();
-    void addFirstUser();
+
+    // User methods
     void addUser(const User& user);
+    bool verifyUser(const std::string& username, const std::string& password);
+
+    // Deck methods
+    void createDeck(int userId, const std::string& deckName);
+    void listDecks(int userId);
+
+    // Card methods
+    void addCard(int deckId, const std::string& question, const std::string& answer);
+    void listCards(int deckId);
     bool hasUsers();
-    bool isDatabaseInitialized();
+
 
 private:
     sqlite3* db;
 
     void executeSQL(const char* sql, const std::string& successMessage);
+
+    friend class DatabaseInitializer;
 };
 
 #endif

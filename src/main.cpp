@@ -1,16 +1,15 @@
 #include "database.h"
+#include "database_initializer.h"
 #include <iostream>
 
 int main() {
-    std::cout << "Welcome to Wannabe Anki LOL" << std::endl;
-
     Database db("anki_app.db");
 
-    db.addFirstUser();
+    if (!DatabaseInitializer::isDatabaseInitialized(db)) {
+        std::cout << "First-time setup detected. Initializing database..." << std::endl;
+        DatabaseInitializer::initialize(db);
+    }
 
-    std::cout << "Initialization complete!" << std::endl;
-
-    // TODO: Add CLI loop
-
+    // Proceed with app logic
     return 0;
 }

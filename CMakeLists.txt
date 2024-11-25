@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 add_executable(${PROJECT_NAME}
     src/main.cpp
     src/database.cpp
+    src/database_initializer.cpp
 )
 
 find_package(SQLite3 REQUIRED)

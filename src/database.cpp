@@ -1,103 +1,18 @@
 #include "database.h"
 #include <iostream>
-#include <filesystem>
+#include <sqlite3.h>
 
 Database::Database(const std::string& db_name) {
-    // Check if the database file exists
-    bool dbExists = std::filesystem::exists(db_name);
-
-    // Open the SQLite database
     if (sqlite3_open(db_name.c_str(), &db)) {
         std::cerr << "Failed to open database: " << sqlite3_errmsg(db) << std::endl;
         db = nullptr;
     } else {
         std::cout << "Database opened successfully!" << std::endl;
-
-        if (!dbExists || !isDatabaseInitialized()) {
-            std::cout << "First-time setup detected. Initializing database..." << std::endl;
-            initialize();
-        }
     }
 }
 
 Database::~Database() {
     sqlite3_close(db);
-}
-
-void Database::initialize() {
-    std::cout << "Initializing database..." << std::endl;
-
-    const char* createUsersTable = R"(
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT NOT NULL UNIQUE,
-            password TEXT NOT NULL
-        );
-    )";
-
-    const char* createDecksTable = R"(
-        CREATE TABLE IF NOT EXISTS decks (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER NOT NULL,
-            name TEXT NOT NULL,
-            FOREIGN KEY (user_id) REFERENCES users (id)
-        );
-    )";
-
-    const char* createCardsTable = R"(
-        CREATE TABLE IF NOT EXISTS cards (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            deck_id INTEGER NOT NULL,
-            question TEXT NOT NULL,
-            answer TEXT NOT NULL,
-            FOREIGN KEY (deck_id) REFERENCES decks (id)
-        );
-    )";
-
-    executeSQL(createUsersTable, "Table 'users' created.");
-    executeSQL(createDecksTable, "Table 'decks' created.");
-    executeSQL(createCardsTable, "Table 'cards' created.");
-}
-
-void Database::executeSQL(const char* sql, const std::string& successMessage) {
-    char* errMsg = nullptr;
-    if (sqlite3_exec(db, sql, nullptr, nullptr, &errMsg) != SQLITE_OK) {
-        std::cerr << "Error executing SQL: " << errMsg << std::endl;
-        sqlite3_free(errMsg);
-    } else {
-        std::cout << successMessage << std::endl;
-    }
-}
-
-bool Database::hasUsers() {
-    const char* sql = "SELECT COUNT(*) FROM users;";
-    sqlite3_stmt* stmt;
-
-    sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
-    if (sqlite3_step(stmt) == SQLITE_ROW) {
-        int userCount = sqlite3_column_int(stmt, 0);
-        sqlite3_finalize(stmt);
-        return userCount > 0;
-    }
-    sqlite3_finalize(stmt);
-    return false;
-}
-
-void Database::addFirstUser() {
-    if (!hasUsers()) {
-        std::cout << "No users found. Please create first user!" << std::endl;
-
-        std::string username, password;
-        std::cout << "Enter username: ";
-        std::cin >> username;
-        std::cout << "Enter password: ";
-        std::cin >> password;
-
-        User user(username, password);
-        addUser(user);
-
-        std::cout << "User '" << username << "' created successfully!" << std::endl;
-    }
 }
 
 void Database::addUser(const User& user) {
@@ -109,18 +24,72 @@ void Database::addUser(const User& user) {
 
     if (sqlite3_step(stmt) != SQLITE_DONE) {
         std::cerr << "Error inserting user: " << sqlite3_errmsg(db) << std::endl;
+    } else {
+        std::cout << "User '" << user.getUsername() << "' created successfully!" << std::endl;
     }
     sqlite3_finalize(stmt);
 }
 
-bool Database::isDatabaseInitialized() {
-    const char* sql = "SELECT name FROM sqlite_master WHERE type='table' AND name='users';";
+bool Database::verifyUser(const std::string& username, const std::string& password) {
+    const char* sql = "SELECT id FROM users WHERE username = ? AND password = ?;";
+    sqlite3_stmt* stmt;
+    sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
+    sqlite3_bind_text(stmt, 1, username.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, password.c_str(), -1, SQLITE_TRANSIENT);
+
+    bool success = sqlite3_step(stmt) == SQLITE_ROW;
+    sqlite3_finalize(stmt);
+    return success;
+}
+
+void Database::createDeck(int userId, const std::string& deckName) {
+    const char* sql = "INSERT INTO decks (user_id, name) VALUES (?, ?);";
+    sqlite3_stmt* stmt;
+    sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
+    sqlite3_bind_int(stmt, 1, userId);
+    sqlite3_bind_text(stmt, 2, deckName.c_str(), -1, SQLITE_TRANSIENT);
+
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        std::cerr << "Error creating deck: " << sqlite3_errmsg(db) << std::endl;
+    } else {
+        std::cout << "Deck '" << deckName << "' created successfully!" << std::endl;
+    }
+    sqlite3_finalize(stmt);
+}
+
+void Database::listDecks(int userId) {
+    const char* sql = "SELECT id, name FROM decks WHERE user_id = ?;";
+    sqlite3_stmt* stmt;
+    sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
+    sqlite3_bind_int(stmt, 1, userId);
+
+    std::cout << "Decks for user " << userId << ":" << std::endl;
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        int deckId = sqlite3_column_int(stmt, 0);
+        const char* deckName = (const char*)sqlite3_column_text(stmt, 1);
+        std::cout << "  Deck ID: " << deckId << ", Name: " << deckName << std::endl;
+    }
+    sqlite3_finalize(stmt);
+}
+
+bool Database::hasUsers() {
+    const char* sql = "SELECT COUNT(*) FROM users;";
     sqlite3_stmt* stmt;
 
     sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
-    bool initialized = sqlite3_step(stmt) == SQLITE_ROW;
+    bool hasUsers = sqlite3_step(stmt) == SQLITE_ROW && sqlite3_column_int(stmt, 0) > 0;
     sqlite3_finalize(stmt);
+    return hasUsers;
+}
 
-    return initialized;
+void Database::executeSQL(const char* sql, const std::string& successMessage) {
+    char* errMsg = nullptr;
+
+    if (sqlite3_exec(db, sql, nullptr, nullptr, &errMsg) != SQLITE_OK) {
+        std::cerr << "Error executing SQL: " << errMsg << std::endl;
+        sqlite3_free(errMsg);
+    } else {
+        std::cout << successMessage << std::endl;
+    }
 }
 
