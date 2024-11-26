@@ -2,6 +2,8 @@
 #define DATABASE_H
 
 #include <string>
+#include <vector>
+#include <tuple>
 #include <sqlite3.h>
 #include "user.h"
 
@@ -10,11 +12,10 @@ public:
     explicit Database(const std::string& db_name);
     ~Database();
 
-    void initialize();
-
     // User methods
     void addUser(const User& user);
     bool verifyUser(const std::string& username, const std::string& password);
+    int getUserId(const std::string& username);
 
     // Deck methods
     void createDeck(int userId, const std::string& deckName);
@@ -24,6 +25,15 @@ public:
     void addCard(int deckId, const std::string& question, const std::string& answer);
     void listCards(int deckId);
     bool hasUsers();
+
+    // Study session methods
+    void startStudySession(int userId, int deckId);
+    void listStudySessions(int userId);
+
+    // Spaced repetition methods
+    std::vector<std::tuple<int, std::string, std::string>> getDueCards(int userId, int deckId);
+    void updateCardProgress(int userId, int cardId, int interval, double easeFactor, int repetitions, int lapses);
+
 
 
 private:
