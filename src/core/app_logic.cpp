@@ -70,6 +70,11 @@ std::vector<std::tuple<int, std::string, std::string>> AppLogic::getDueCards(int
 }
 
 void AppLogic::updateCardProgress(int userId, int cardId, int grade) {
+    if (grade < 0 || grade > 3) {
+        std::cerr << "Invalid grade: " << grade << ". Grade must be between 0 and 3." << std::endl;
+        return;
+    }
+
     int interval = 1;
     double easeFactor = 2.5;
     int repetitions = 0;
@@ -81,12 +86,13 @@ void AppLogic::updateCardProgress(int userId, int cardId, int grade) {
     } else {
         repetitions++;
         easeFactor += (0.1 - (3 - grade) * (0.08 + (3 - grade) * 0.02));
-        easeFactor = std::max(1.3, easeFactor);
+        easeFactor = std::max(1.3, easeFactor); // Ensure ease factor doesn't drop below minimum
         interval *= easeFactor;
     }
 
     db.updateCardProgress(userId, cardId, interval, easeFactor, repetitions, lapses);
 }
+
 
 
 

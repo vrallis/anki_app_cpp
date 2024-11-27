@@ -18,7 +18,7 @@ void StudySession::start() {
 }
 
 std::vector<std::tuple<int, std::string, std::string>> StudySession::fetchDueCards() {
-    return app.getDueCards(userId, deckId); // Fetch due cards via AppLogic
+    return app.getDueCards(userId, deckId);
 }
 
 void StudySession::reviewCard(int cardId, const std::string& question, const std::string& answer) {
@@ -29,9 +29,19 @@ void StudySession::reviewCard(int cardId, const std::string& question, const std
     std::getline(std::cin, userAnswer);
 
     std::cout << "Correct Answer: " << answer << std::endl;
-    std::cout << "Rate your response (0=Forgot, 1=Hard, 2=Good, 3=Easy): ";
-    int grade;
-    std::cin >> grade;
 
-    app.updateCardProgress(userId, cardId, grade); // Update progress via AppLogic
+    int grade;
+    while (true) {
+        std::cout << "Rate your response (0=Forgot, 1=Hard, 2=Good, 3=Easy): ";
+        std::cin >> grade;
+
+        if (grade >= 0 && grade <= 3) {
+            break;
+        } else {
+            std::cout << "Invalid grade. Please enter a number between 0 and 3.\n";
+        }
+    }
+
+    app.updateCardProgress(userId, cardId, grade);
 }
+
