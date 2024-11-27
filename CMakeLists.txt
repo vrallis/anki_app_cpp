@@ -10,6 +10,7 @@ add_executable(${PROJECT_NAME}
     src/core/database.cpp
     src/core/database_initializer.cpp
     src/core/app_logic.cpp
+    src/cli/cli.cpp
 )
 
 find_package(SQLite3 REQUIRED)

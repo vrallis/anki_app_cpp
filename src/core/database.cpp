@@ -24,17 +24,22 @@ Database::~Database() {
 void Database::addUser(const User& user) {
     const char* sql = "INSERT INTO users (username, password) VALUES (?, ?);";
     sqlite3_stmt* stmt;
-    sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
-    sqlite3_bind_text(stmt, 1, user.getUsername().c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 2, user.getPassword().c_str(), -1, SQLITE_TRANSIENT);
 
-    if (sqlite3_step(stmt) != SQLITE_DONE) {
-        std::cerr << "Error inserting user: " << sqlite3_errmsg(db) << std::endl;
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) == SQLITE_OK) {
+        sqlite3_bind_text(stmt, 1, user.getUsername().c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(stmt, 2, user.getPassword().c_str(), -1, SQLITE_TRANSIENT);
+
+        if (sqlite3_step(stmt) == SQLITE_DONE) {
+            std::cout << "User '" << user.getUsername() << "' added to the database.\n";
+        } else {
+            std::cerr << "Error adding user: " << sqlite3_errmsg(db) << std::endl;
+        }
+        sqlite3_finalize(stmt);
     } else {
-        std::cout << "User '" << user.getUsername() << "' created successfully!" << std::endl;
+        std::cerr << "Failed to prepare addUser query: " << sqlite3_errmsg(db) << std::endl;
     }
-    sqlite3_finalize(stmt);
 }
+
 
 bool Database::verifyUser(const std::string& username, const std::string& password) {
     const char* sql = "SELECT id FROM users WHERE username = ? AND password = ?;";
@@ -82,10 +87,14 @@ bool Database::hasUsers() {
     const char* sql = "SELECT COUNT(*) FROM users;";
     sqlite3_stmt* stmt;
 
-    sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
-    bool hasUsers = sqlite3_step(stmt) == SQLITE_ROW && sqlite3_column_int(stmt, 0) > 0;
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) == SQLITE_OK) {
+        sqlite3_step(stmt);
+        int userCount = sqlite3_column_int(stmt, 0);
+        sqlite3_finalize(stmt);
+        return userCount > 0;
+    }
     sqlite3_finalize(stmt);
-    return hasUsers;
+    return false;
 }
 
 void Database::executeSQL(const char* sql, const std::string& successMessage) {

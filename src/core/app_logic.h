@@ -20,6 +20,7 @@ public:
     void listCards(int deckId);
 
     void studyDeck(int userId, int deckId);
+    int getUserId(const std::string& username);
 
 private:
     Database& db;

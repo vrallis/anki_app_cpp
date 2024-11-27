@@ -4,12 +4,10 @@
 AppLogic::AppLogic(Database& db) : db(db) {}
 
 bool AppLogic::addUser(const std::string& username, const std::string& password) {
-    if (db.hasUsers()) {
-        db.addUser(User(username, password));
-        return true;
-    }
-    return false;
+    db.addUser(User(username, password));
+    return true;
 }
+
 
 bool AppLogic::verifyUser(const std::string& username, const std::string& password) {
     return db.verifyUser(username, password);
@@ -29,6 +27,10 @@ void AppLogic::addCard(int deckId, const std::string& question, const std::strin
 
 void AppLogic::listCards(int deckId) {
     db.listCards(deckId);
+}
+
+int AppLogic::getUserId(const std::string& username) {
+    return db.getUserId(username);
 }
 
 void AppLogic::studyDeck(int userId, int deckId) {
@@ -62,4 +64,5 @@ void AppLogic::studyDeck(int userId, int deckId) {
         db.updateCardProgress(userId, cardId, interval, easeFactor, repetitions, lapses);
     }
 }
+
 

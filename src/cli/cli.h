@@ -5,7 +5,6 @@
 
 class CLI {
 public:
-    // TODO implemnet the following methods
     explicit CLI(AppLogic& app);
 
     void run();
@@ -13,11 +12,11 @@ public:
 private:
     AppLogic& app;
 
-
     void mainMenu();
     void handleUserCreation();
     void handleLogin();
     void handleDeckManagement(int userId);
+    void handleStudySession(int userId);
 };
 
 #endif
