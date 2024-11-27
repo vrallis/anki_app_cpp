@@ -2,6 +2,8 @@
 #include "core/database.h"
 #include <iostream>
 #include <string>
+#include "study_session.h"
+
 
 CLI::CLI(AppLogic& app) : app(app) {}
 
@@ -95,3 +97,13 @@ void CLI::handleDeckManagement(int userId) {
         }
     }
 }
+
+void CLI::handleStudySession(int userId) {
+    int deckId;
+    std::cout << "Enter the deck ID to study: ";
+    std::cin >> deckId;
+
+    StudySession session(app, userId, deckId);
+    session.start();
+}
+

@@ -65,4 +65,28 @@ void AppLogic::studyDeck(int userId, int deckId) {
     }
 }
 
+std::vector<std::tuple<int, std::string, std::string>> AppLogic::getDueCards(int userId, int deckId) {
+    return db.getDueCards(userId, deckId);
+}
+
+void AppLogic::updateCardProgress(int userId, int cardId, int grade) {
+    int interval = 1;
+    double easeFactor = 2.5;
+    int repetitions = 0;
+    int lapses = 0;
+
+    if (grade == 0) {
+        lapses++;
+        interval = 1;
+    } else {
+        repetitions++;
+        easeFactor += (0.1 - (3 - grade) * (0.08 + (3 - grade) * 0.02));
+        easeFactor = std::max(1.3, easeFactor);
+        interval *= easeFactor;
+    }
+
+    db.updateCardProgress(userId, cardId, interval, easeFactor, repetitions, lapses);
+}
+
+
 

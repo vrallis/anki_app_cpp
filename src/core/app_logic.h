@@ -22,6 +22,10 @@ public:
     void studyDeck(int userId, int deckId);
     int getUserId(const std::string& username);
 
+    std::vector<std::tuple<int, std::string, std::string>> getDueCards(int userId, int deckId);
+    void updateCardProgress(int userId, int cardId, int grade);
+
+
 private:
     Database& db;
 };
