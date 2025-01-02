@@ -8,11 +8,11 @@ Database::Database(const std::string& db_name) {
         std::cerr << "Failed to open database: " << sqlite3_errmsg(db) << std::endl;
         db = nullptr;
     } else {
-        std::cout << "Database opened successfully!" << std::endl;
-
         if (!DatabaseInitializer::isDatabaseInitialized(*this)) {
+            std::cout << "Database not detected. Creating one right now!" << std::endl;
             DatabaseInitializer::initialize(*this);
         }
+        std::cout << "Database opened successfully!" << std::endl;
     }
 }
 

@@ -8,7 +8,6 @@ int main() {
 
     AppLogic appLogic(db);
     CLI cli(appLogic);
-
     cli.run();
 
     return 0;

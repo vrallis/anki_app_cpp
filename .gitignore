@@ -48,6 +48,8 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 build/anki_app.db
+build/.cmake
+build/CMakeFiles
 
 ### CMake Patch ###
 # External projects
