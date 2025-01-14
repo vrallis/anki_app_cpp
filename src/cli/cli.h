@@ -5,17 +5,16 @@
 
 class CLI {
 public:
-    explicit CLI(AppLogic& app);
-
+    CLI(AppLogic& app);
     void run();
 
 private:
     AppLogic& app;
-
     void mainMenu();
+    void userMenu(int userId);
+    void deckMenu(int userId);
     void handleUserCreation();
     void handleLogin();
-    void handleDeckManagement(int userId);
     void handleStudySession(int userId);
 };
 

@@ -50,6 +50,7 @@ _deps
 build/anki_app.db
 build/.cmake
 build/CMakeFiles
+build/anki_app_cpp
 
 ### CMake Patch ###
 # External projects

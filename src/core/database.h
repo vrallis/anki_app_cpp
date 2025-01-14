@@ -18,7 +18,7 @@ public:
     int getUserId(const std::string& username);
 
     // Deck methods
-    void createDeck(int userId, const std::string& deckName);
+    int createDeck(int userId, const std::string& deckName);
     void listDecks(int userId);
 
     // Card methods
@@ -33,6 +33,10 @@ public:
     // Spaced repetition methods
     std::vector<std::tuple<int, std::string, std::string>> getDueCards(int userId, int deckId);
     void updateCardProgress(int userId, int cardId, int interval, double easeFactor, int repetitions, int lapses);
+
+    bool userOwnsDeck(int userId, int deckId);
+    void deleteDeck(int deckId);
+
 
 
 

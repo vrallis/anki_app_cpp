@@ -53,20 +53,30 @@ bool Database::verifyUser(const std::string& username, const std::string& passwo
     return success;
 }
 
-void Database::createDeck(int userId, const std::string& deckName) {
-    const char* sql = "INSERT INTO decks (user_id, name) VALUES (?, ?);";
+int Database::createDeck(int userId, const std::string& deckName) {
+    const char* sql = "INSERT INTO decks (user_id, name) VALUES (?, ?) RETURNING id;";
     sqlite3_stmt* stmt;
-    sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
-    sqlite3_bind_int(stmt, 1, userId);
-    sqlite3_bind_text(stmt, 2, deckName.c_str(), -1, SQLITE_TRANSIENT);
+    int deckId = -1;
 
-    if (sqlite3_step(stmt) != SQLITE_DONE) {
-        std::cerr << "Error creating deck: " << sqlite3_errmsg(db) << std::endl;
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) == SQLITE_OK) {
+        sqlite3_bind_int(stmt, 1, userId);
+        sqlite3_bind_text(stmt, 2, deckName.c_str(), -1, SQLITE_TRANSIENT);
+
+        if (sqlite3_step(stmt) == SQLITE_ROW) {
+            deckId = sqlite3_column_int(stmt, 0);
+        } else {
+            std::cerr << "Error creating deck: " << sqlite3_errmsg(db) << std::endl;
+        }
+
+        sqlite3_finalize(stmt);
     } else {
-        std::cout << "Deck '" << deckName << "' created successfully!" << std::endl;
+        std::cerr << "Failed to prepare createDeck query: " << sqlite3_errmsg(db) << std::endl;
     }
-    sqlite3_finalize(stmt);
+
+    return deckId;
 }
+
+
 
 void Database::listDecks(int userId) {
     const char* sql = "SELECT id, name FROM decks WHERE user_id = ?;";
@@ -252,4 +262,45 @@ int Database::getUserId(const std::string& username) {
 
     return userId;
 }
+
+bool Database::userOwnsDeck(int userId, int deckId) {
+    const char* sql = "SELECT COUNT(*) FROM decks WHERE id = ? AND user_id = ?;";
+    sqlite3_stmt* stmt;
+    bool ownsDeck = false;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) == SQLITE_OK) {
+        sqlite3_bind_int(stmt, 1, deckId);
+        sqlite3_bind_int(stmt, 2, userId);
+
+        if (sqlite3_step(stmt) == SQLITE_ROW) {
+            ownsDeck = sqlite3_column_int(stmt, 0) > 0;
+        }
+        sqlite3_finalize(stmt);
+    } else {
+        std::cerr << "Failed to prepare userOwnsDeck query: " << sqlite3_errmsg(db) << std::endl;
+    }
+
+    return ownsDeck;
+}
+
+void Database::deleteDeck(int deckId) {
+    const char* sql = "DELETE FROM cards WHERE deck_id = ?; DELETE FROM decks WHERE id = ?;";
+    sqlite3_stmt* stmt;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) == SQLITE_OK) {
+        sqlite3_bind_int(stmt, 1, deckId);
+        sqlite3_bind_int(stmt, 2, deckId);
+
+        if (sqlite3_step(stmt) != SQLITE_DONE) {
+            std::cerr << "Error deleting deck: " << sqlite3_errmsg(db) << std::endl;
+        } else {
+            std::cout << "Deck and associated cards deleted successfully." << std::endl;
+        }
+        sqlite3_finalize(stmt);
+    } else {
+        std::cerr << "Failed to prepare deleteDeck query: " << sqlite3_errmsg(db) << std::endl;
+    }
+}
+
+
 
