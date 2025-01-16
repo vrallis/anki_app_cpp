@@ -21,23 +21,36 @@ Database::~Database() {
     sqlite3_close(db);
 }
 
-void Database::addUser(const User& user) {
+bool Database::addUser(const User& user) {
     const char* sql = "INSERT INTO users (username, password) VALUES (?, ?);";
     sqlite3_stmt* stmt;
+    bool success = false;
+
+    std::cout << "Attempting to add user: " << user.getUsername() << std::endl;
 
     if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) == SQLITE_OK) {
         sqlite3_bind_text(stmt, 1, user.getUsername().c_str(), -1, SQLITE_TRANSIENT);
         sqlite3_bind_text(stmt, 2, user.getPassword().c_str(), -1, SQLITE_TRANSIENT);
 
-        if (sqlite3_step(stmt) == SQLITE_DONE) {
+        int stepResult = sqlite3_step(stmt);
+        if (stepResult == SQLITE_DONE) {
             std::cout << "User '" << user.getUsername() << "' added to the database.\n";
+            success = true;
         } else {
-            std::cerr << "Error adding user: " << sqlite3_errmsg(db) << std::endl;
+            int errCode = sqlite3_errcode(db);
+            std::cerr << "Error adding user: " << sqlite3_errmsg(db) << " (Error code: " << errCode << ")\n";
+            if (errCode == SQLITE_CONSTRAINT_UNIQUE) {
+                std::cerr << "Error: User '" << user.getUsername() << "' already exists.\n";
+                success = false;
+            }
         }
         sqlite3_finalize(stmt);
     } else {
         std::cerr << "Failed to prepare addUser query: " << sqlite3_errmsg(db) << std::endl;
     }
+
+    std::cout << "Add user result: " << (success ? "success" : "failure") << std::endl;
+    return success;
 }
 
 

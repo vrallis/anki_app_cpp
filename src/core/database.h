@@ -12,8 +12,10 @@ public:
     explicit Database(const std::string& db_name);
     ~Database();
 
+    sqlite3* getDb() const { return db; }
+
     // User methods
-    void addUser(const User& user);
+    bool addUser(const User& user);
     bool verifyUser(const std::string& username, const std::string& password);
     int getUserId(const std::string& username);
 
