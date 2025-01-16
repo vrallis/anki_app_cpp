@@ -78,6 +78,10 @@ bool AppLogic::doesUserOwnDeck(int userId, int deckId) {
     return db.userOwnsDeck(userId, deckId);
 }
 
+time_t AppLogic::getNextReviewDate(int deckId) {
+    return db.getNextReviewDate(deckId);
+}
+
 void AppLogic::studyDeck(int userId, int deckId) {
     auto dueCards = db.getDueCards(userId, deckId);
     for (const auto& [cardId, question, answer] : dueCards) {

@@ -6,6 +6,7 @@
 #include <tuple>
 #include <sqlite3.h>
 #include "user.h"
+#include <ctime>
 
 class Database {
 public:
@@ -42,6 +43,8 @@ public:
     bool deleteCard(int cardId);
     bool editCard(int cardId, const std::string& question, const std::string& answer);
     void listCards(int deckId);
+
+    time_t getNextReviewDate(int deckId);
 
 
 

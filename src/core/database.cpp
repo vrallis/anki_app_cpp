@@ -365,3 +365,22 @@ int Database::getUserId(const std::string& username) {
 
     return userId;
 }
+
+time_t Database::getNextReviewDate(int deckId) {
+    const char* sql = "SELECT MIN(dueDate) FROM cards WHERE deck_id = ?;";
+    sqlite3_stmt* stmt;
+    time_t nextReviewDate = 0;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) == SQLITE_OK) {
+        sqlite3_bind_int(stmt, 1, deckId);
+
+        if (sqlite3_step(stmt) == SQLITE_ROW) {
+            nextReviewDate = sqlite3_column_int(stmt, 0);
+        }
+        sqlite3_finalize(stmt);
+    } else {
+        std::cerr << "Failed to prepare getNextReviewDate query: " << sqlite3_errmsg(db) << std::endl;
+    }
+
+    return nextReviewDate;
+}

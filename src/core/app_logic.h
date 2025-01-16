@@ -29,6 +29,8 @@ public:
     void updateCardProgress(int userId, int cardId, int grade);
     bool doesUserOwnDeck(int userId, int deckId);
 
+    time_t getNextReviewDate(int deckId);
+
 private:
     Database& db;
     FileHandler fileHandler;

@@ -17,6 +17,7 @@ private:
     void deckMenu(int userId);
     void handleStudySession(int userId);
     void manageCards(int deckId);
+    void checkNextReviewDate(int deckId);
 
     AppLogic& app;
 };

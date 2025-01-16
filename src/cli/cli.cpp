@@ -102,7 +102,8 @@ void CLI::deckMenu(int userId) {
         std::cout << "3. Import Deck" << std::endl;
         std::cout << "4. List Decks" << std::endl;
         std::cout << "5. Manage Cards" << std::endl;
-        std::cout << "6. Go Back" << std::endl;
+        std::cout << "6. Check Next Review Date" << std::endl;
+        std::cout << "7. Go Back" << std::endl;
 
         int choice;
         std::cout << "Enter your choice: ";
@@ -153,7 +154,14 @@ void CLI::deckMenu(int userId) {
             }
             break;
         }
-        case 6:
+        case 6: {
+            int deckId;
+            std::cout << "Enter deck ID to check next review date: ";
+            std::cin >> deckId;
+            checkNextReviewDate(deckId);
+            break;
+        }
+        case 7:
             return;
         default:
             std::cout << "Invalid choice. Try again." << std::endl;
@@ -229,5 +237,14 @@ void CLI::handleStudySession(int userId) {
         session.start();
     } else {
         std::cout << "You do not own this deck or it does not exist." << std::endl;
+    }
+}
+
+void CLI::checkNextReviewDate(int deckId) {
+    time_t nextReviewDate = app.getNextReviewDate(deckId);
+    if (nextReviewDate == 0) {
+        std::cout << "There are no cards in this deck." << std::endl;
+    } else {
+        std::cout << "The next review date for deck " << deckId << " is: " << std::ctime(&nextReviewDate);
     }
 }
