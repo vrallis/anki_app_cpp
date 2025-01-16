@@ -1,5 +1,6 @@
 #include "cli.h"
 #include "core/database.h"
+#include "ascii_art.h"
 #include <iostream>
 #include <string>
 #include "study_session.h"
@@ -13,10 +14,10 @@ void CLI::run() {
 }
 
 void CLI::mainMenu() {
-    std::cout << "\n--- Main Menu ---\n";
-    std::cout << "1. Create User\n";
-    std::cout << "2. Login\n";
-    std::cout << "3. Exit\n";
+    std::cout << generateAsciiArt("Main Menu") << std::endl;
+    std::cout << "1. Create User" << std::endl;
+    std::cout << "2. Login" << std::endl;
+    std::cout << "3. Exit" << std::endl;
 
     int choice;
     std::cout << "Enter your choice: ";
@@ -30,10 +31,10 @@ void CLI::mainMenu() {
         handleLogin();
         break;
     case 3:
-        std::cout << "Exiting...\n";
+        std::cout << "Exiting..." << std::endl;
         exit(0);
     default:
-        std::cout << "Invalid choice. Try again.\n";
+        std::cout << "Invalid choice. Try again." << std::endl;
     }
 }
 
@@ -45,9 +46,9 @@ void CLI::handleUserCreation() {
     std::cin >> password;
 
     if (app.addUser(username, password)) {
-        std::cout << "User created successfully.\n";
+        std::cout << "User created successfully." << std::endl;
     } else {
-        std::cout << "Failed to create user. User might already exist.\n";
+        std::cout << "Failed to create user. User might already exist." << std::endl;
     }
 }
 
@@ -59,20 +60,20 @@ void CLI::handleLogin() {
     std::cin >> password;
 
     if (app.verifyUser(username, password)) {
-        std::cout << "Login successful.\n";
+        std::cout << "Login successful." << std::endl;
         int userId = app.getUserId(username);
         userMenu(userId);
     } else {
-        std::cout << "Invalid credentials.\n";
+        std::cout << "Invalid credentials." << std::endl;
     }
 }
 
 void CLI::userMenu(int userId) {
     while (true) {
-        std::cout << "\n--- User Menu ---\n";
-        std::cout << "1. Deck Management\n";
-        std::cout << "2. Start Study Session\n";
-        std::cout << "3. Logout\n";
+        std::cout << generateAsciiArt("User Menu") << std::endl;
+        std::cout << "1. Deck Management" << std::endl;
+        std::cout << "2. Start Study Session" << std::endl;
+        std::cout << "3. Logout" << std::endl;
 
         int choice;
         std::cout << "Enter your choice: ";
@@ -88,19 +89,20 @@ void CLI::userMenu(int userId) {
         case 3:
             return;
         default:
-            std::cout << "Invalid choice. Try again.\n";
+            std::cout << "Invalid choice. Try again." << std::endl;
         }
     }
 }
 
 void CLI::deckMenu(int userId) {
     while (true) {
-        std::cout << "\n--- Deck Management ---\n";
-        std::cout << "1. Create Deck\n";
-        std::cout << "2. Delete Deck\n";
-        std::cout << "3. Import Deck\n";
-        std::cout << "4. List Decks\n";
-        std::cout << "5. Go Back\n";
+        std::cout << generateAsciiArt("Deck Management") << std::endl;
+        std::cout << "1. Create Deck" << std::endl;
+        std::cout << "2. Delete Deck" << std::endl;
+        std::cout << "3. Import Deck" << std::endl;
+        std::cout << "4. List Decks" << std::endl;
+        std::cout << "5. Manage Cards" << std::endl;
+        std::cout << "6. Go Back" << std::endl;
 
         int choice;
         std::cout << "Enter your choice: ";
@@ -112,7 +114,7 @@ void CLI::deckMenu(int userId) {
             std::cout << "Enter deck name: ";
             std::cin >> deckName;
             app.createDeck(userId, deckName);
-            std::cout << "Deck created successfully.\n";
+            std::cout << "Deck created successfully." << std::endl;
             break;
         }
         case 2: {
@@ -120,9 +122,9 @@ void CLI::deckMenu(int userId) {
             std::cout << "Enter deck ID to delete: ";
             std::cin >> deckId;
             if (app.deleteDeck(userId, deckId)) {
-                std::cout << "Deck deleted successfully.\n";
+                std::cout << "Deck deleted successfully." << std::endl;
             } else {
-                std::cout << "Failed to delete deck.\n";
+                std::cout << "Failed to delete deck." << std::endl;
             }
             break;
         }
@@ -131,19 +133,88 @@ void CLI::deckMenu(int userId) {
             std::cout << "Enter file path for deck import: ";
             std::cin >> filePath;
             if (app.importDeck(userId, filePath)) {
-                std::cout << "Deck imported successfully.\n";
+                std::cout << "Deck imported successfully." << std::endl;
             } else {
-                std::cout << "Failed to import deck.\n";
+                std::cout << "Failed to import deck." << std::endl;
             }
             break;
         }
         case 4:
             app.listDecks(userId);
             break;
+        case 5: {
+            int deckId;
+            std::cout << "Enter deck ID to manage cards: ";
+            std::cin >> deckId;
+            if (app.doesUserOwnDeck(userId, deckId)) {
+                manageCards(deckId);
+            } else {
+                std::cout << "You do not own this deck or it does not exist." << std::endl;
+            }
+            break;
+        }
+        case 6:
+            return;
+        default:
+            std::cout << "Invalid choice. Try again." << std::endl;
+        }
+    }
+}
+
+void CLI::manageCards(int deckId) {
+    while (true) {
+        std::cout << generateAsciiArt("Manage Cards") << std::endl;
+        std::cout << "1. Add Card" << std::endl;
+        std::cout << "2. Edit Card" << std::endl;
+        std::cout << "3. Delete Card" << std::endl;
+        std::cout << "4. List Cards" << std::endl;
+        std::cout << "5. Go Back" << std::endl;
+
+        int choice;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+        case 1: {
+            std::string question, answer;
+            std::cout << "Enter question: ";
+            std::cin.ignore();
+            std::getline(std::cin, question);
+            std::cout << "Enter answer: ";
+            std::getline(std::cin, answer);
+            app.addCard(deckId, question, answer);
+            std::cout << "Card added successfully." << std::endl;
+            break;
+        }
+        case 2: {
+            int cardId;
+            std::string question, answer;
+            std::cout << "Enter card ID to edit: ";
+            std::cin >> cardId;
+            std::cout << "Enter new question: ";
+            std::cin.ignore();
+            std::getline(std::cin, question);
+            std::cout << "Enter new answer: ";
+            std::getline(std::cin, answer);
+            app.editCard(cardId, question, answer);
+            std::cout << "Card edited successfully." << std::endl;
+            break;
+        }
+        case 3: {
+            int cardId;
+            std::cout << "Enter card ID to delete: ";
+            std::cin >> cardId;
+            app.removeCard(cardId);
+            std::cout << "Card deleted successfully." << std::endl;
+            break;
+        }
+        case 4:
+            app.listCards(deckId);
+            break;
         case 5:
             return;
         default:
-            std::cout << "Invalid choice. Try again.\n";
+            std::cout << "Invalid choice. Try again." << std::endl;
         }
     }
 }
@@ -153,6 +224,10 @@ void CLI::handleStudySession(int userId) {
     std::cout << "Enter the deck ID to study: ";
     std::cin >> deckId;
 
-    StudySession session(app, userId, deckId);
-    session.start();
+    if (app.doesUserOwnDeck(userId, deckId)) {
+        StudySession session(app, userId, deckId);
+        session.start();
+    } else {
+        std::cout << "You do not own this deck or it does not exist." << std::endl;
+    }
 }

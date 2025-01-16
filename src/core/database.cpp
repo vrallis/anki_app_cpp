@@ -2,17 +2,18 @@
 #include <iostream>
 #include <sqlite3.h>
 #include "database_initializer.h"
+#include <ctime>
 
 Database::Database(const std::string& db_name) {
     if (sqlite3_open(db_name.c_str(), &db)) {
-        std::cerr << "Failed to open database: " << sqlite3_errmsg(db) << std::endl;
-        db = nullptr;
+        std::cerr << "Can't open database: " << sqlite3_errmsg(db) << std::endl;
     } else {
         if (!DatabaseInitializer::isDatabaseInitialized(*this)) {
             std::cout << "Database not detected. Creating one right now!" << std::endl;
             DatabaseInitializer::initialize(*this);
+        } else {
+            std::cout << "Database opened successfully!" << std::endl;
         }
-        std::cout << "Database opened successfully!" << std::endl;
     }
 }
 
@@ -131,49 +132,6 @@ void Database::executeSQL(const char* sql, const std::string& successMessage) {
     }
 }
 
-void Database::addCard(int deckId, const std::string& question, const std::string& answer) {
-    const char* sql = "INSERT INTO cards (deck_id, question, answer) VALUES (?, ?, ?);";
-    sqlite3_stmt* stmt;
-
-    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) == SQLITE_OK) {
-        sqlite3_bind_int(stmt, 1, deckId);                           // Bind deckId
-        sqlite3_bind_text(stmt, 2, question.c_str(), -1, SQLITE_TRANSIENT); // Bind question
-        sqlite3_bind_text(stmt, 3, answer.c_str(), -1, SQLITE_TRANSIENT);   // Bind answer
-
-        if (sqlite3_step(stmt) == SQLITE_DONE) {
-            std::cout << "Card added successfully." << std::endl;
-        } else {
-            std::cerr << "Error adding card: " << sqlite3_errmsg(db) << std::endl;
-        }
-
-        sqlite3_finalize(stmt);
-    } else {
-        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
-    }
-}
-
-void Database::listCards(int deckId) {
-    const char* sql = "SELECT id, question, answer FROM cards WHERE deck_id = ?;";
-    sqlite3_stmt* stmt;
-
-    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) == SQLITE_OK) {
-        sqlite3_bind_int(stmt, 1, deckId); // Bind deckId
-
-        std::cout << "Cards in deck " << deckId << ":" << std::endl;
-        while (sqlite3_step(stmt) == SQLITE_ROW) {
-            int cardId = sqlite3_column_int(stmt, 0);
-            const char* question = (const char*)sqlite3_column_text(stmt, 1);
-            const char* answer = (const char*)sqlite3_column_text(stmt, 2);
-
-            std::cout << "  Card ID: " << cardId << ", Question: " << question << ", Answer: " << answer << std::endl;
-        }
-
-        sqlite3_finalize(stmt);
-    } else {
-        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
-    }
-}
-
 void Database::startStudySession(int userId, int deckId) {
     const char* sql = "INSERT INTO study_sessions (user_id, deck_id) VALUES (?, ?);";
     sqlite3_stmt* stmt;
@@ -205,75 +163,6 @@ void Database::listStudySessions(int userId) {
         std::cout << "  Session ID: " << sessionId << ", Deck: " << deckName << std::endl;
     }
     sqlite3_finalize(stmt);
-}
-
-std::vector<std::tuple<int, std::string, std::string>> Database::getDueCards(int userId, int deckId) {
-    const char* sql = R"(
-        SELECT c.id, c.question, c.answer
-        FROM cards c
-        JOIN card_progress cp ON c.id = cp.card_id
-        WHERE cp.user_id = ? AND cp.deck_id = ? AND cp.due_date <= CURRENT_TIMESTAMP;
-    )";
-    sqlite3_stmt* stmt;
-
-    std::vector<std::tuple<int, std::string, std::string>> dueCards;
-
-    sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
-    sqlite3_bind_int(stmt, 1, userId);
-    sqlite3_bind_int(stmt, 2, deckId);
-
-    while (sqlite3_step(stmt) == SQLITE_ROW) {
-        int cardId = sqlite3_column_int(stmt, 0);
-        const char* question = (const char*)sqlite3_column_text(stmt, 1);
-        const char* answer = (const char*)sqlite3_column_text(stmt, 2);
-        dueCards.emplace_back(cardId, question, answer);
-    }
-    sqlite3_finalize(stmt);
-    return dueCards;
-}
-
-void Database::updateCardProgress(int userId, int cardId, int interval, double easeFactor, int repetitions, int lapses) {
-    const char* sql = R"(
-        UPDATE card_progress
-        SET interval = ?, ease_factor = ?, repetitions = ?, lapses = ?, due_date = DATETIME('now', '+' || ? || ' days')
-        WHERE user_id = ? AND card_id = ?;
-    )";
-    sqlite3_stmt* stmt;
-
-    sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
-    sqlite3_bind_int(stmt, 1, interval);
-    sqlite3_bind_double(stmt, 2, easeFactor);
-    sqlite3_bind_int(stmt, 3, repetitions);
-    sqlite3_bind_int(stmt, 4, lapses);
-    sqlite3_bind_int(stmt, 5, interval);
-    sqlite3_bind_int(stmt, 6, userId);
-    sqlite3_bind_int(stmt, 7, cardId);
-
-    if (sqlite3_step(stmt) == SQLITE_DONE) {
-        std::cout << "Card progress updated." << std::endl;
-    } else {
-        std::cerr << "Error updating card progress: " << sqlite3_errmsg(db) << std::endl;
-    }
-    sqlite3_finalize(stmt);
-}
-
-int Database::getUserId(const std::string& username) {
-    const char* sql = "SELECT id FROM users WHERE username = ?;";
-    sqlite3_stmt* stmt;
-    int userId = -1;
-
-    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) == SQLITE_OK) {
-        sqlite3_bind_text(stmt, 1, username.c_str(), -1, SQLITE_TRANSIENT);
-
-        if (sqlite3_step(stmt) == SQLITE_ROW) {
-            userId = sqlite3_column_int(stmt, 0);
-        }
-        sqlite3_finalize(stmt);
-    } else {
-        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
-    }
-
-    return userId;
 }
 
 bool Database::userOwnsDeck(int userId, int deckId) {
@@ -315,5 +204,164 @@ void Database::deleteDeck(int deckId) {
     }
 }
 
+bool Database::addCard(int deckId, const std::string& question, const std::string& answer) {
+    const char* sql = "INSERT INTO cards (deck_id, question, answer, dueDate) VALUES (?, ?, ?, ?);";
+    sqlite3_stmt* stmt;
+    bool success = false;
 
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) == SQLITE_OK) {
+        sqlite3_bind_int(stmt, 1, deckId);
+        sqlite3_bind_text(stmt, 2, question.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(stmt, 3, answer.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_int(stmt, 4, std::time(nullptr));
 
+        if (sqlite3_step(stmt) == SQLITE_DONE) {
+            std::cout << "Card added successfully.\n";
+            success = true;
+        } else {
+            std::cerr << "Error adding card: " << sqlite3_errmsg(db) << std::endl;
+        }
+        sqlite3_finalize(stmt);
+    } else {
+        std::cerr << "Failed to prepare addCard query: " << sqlite3_errmsg(db) << std::endl;
+    }
+
+    return success;
+}
+
+bool Database::deleteCard(int cardId) {
+    const char* sql = "DELETE FROM cards WHERE id = ?;";
+    sqlite3_stmt* stmt;
+    bool success = false;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) == SQLITE_OK) {
+        sqlite3_bind_int(stmt, 1, cardId);
+
+        if (sqlite3_step(stmt) == SQLITE_DONE) {
+            std::cout << "Card deleted successfully.\n";
+            success = true;
+        } else {
+            std::cerr << "Error deleting card: " << sqlite3_errmsg(db) << std::endl;
+        }
+        sqlite3_finalize(stmt);
+    } else {
+        std::cerr << "Failed to prepare deleteCard query: " << sqlite3_errmsg(db) << std::endl;
+    }
+
+    return success;
+}
+
+bool Database::editCard(int cardId, const std::string& question, const std::string& answer) {
+    const char* sql = "UPDATE cards SET question = ?, answer = ? WHERE id = ?;";
+    sqlite3_stmt* stmt;
+    bool success = false;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) == SQLITE_OK) {
+        sqlite3_bind_text(stmt, 1, question.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(stmt, 2, answer.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_int(stmt, 3, cardId);
+
+        if (sqlite3_step(stmt) == SQLITE_DONE) {
+            std::cout << "Card updated successfully.\n";
+            success = true;
+        } else {
+            std::cerr << "Error updating card: " << sqlite3_errmsg(db) << std::endl;
+        }
+        sqlite3_finalize(stmt);
+    } else {
+        std::cerr << "Failed to prepare editCard query: " << sqlite3_errmsg(db) << std::endl;
+    }
+
+    return success;
+}
+
+void Database::listCards(int deckId) {
+    const char* sql = "SELECT id, question, answer FROM cards WHERE deck_id = ?;";
+    sqlite3_stmt* stmt;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) == SQLITE_OK) {
+        sqlite3_bind_int(stmt, 1, deckId);
+
+        std::cout << "Cards in deck " << deckId << ":\n";
+        while (sqlite3_step(stmt) == SQLITE_ROW) {
+            int cardId = sqlite3_column_int(stmt, 0);
+            const char* question = (const char*)sqlite3_column_text(stmt, 1);
+            const char* answer = (const char*)sqlite3_column_text(stmt, 2);
+
+            std::cout << "  Card ID: " << cardId << ", Question: " << question << ", Answer: " << answer << std::endl;
+        }
+        sqlite3_finalize(stmt);
+    } else {
+        std::cerr << "Failed to prepare listCards query: " << sqlite3_errmsg(db) << std::endl;
+    }
+}
+
+void Database::updateCardProgress(int userId, int cardId, int interval, double easeFactor, int repetitions, int lapses) {
+    const char* sql = "UPDATE cards SET interval = ?, easeFactor = ?, repetitions = ?, lapses = ?, dueDate = ? WHERE id = ?;";
+    sqlite3_stmt* stmt;
+    bool success = false;
+
+    int dueDate = std::time(nullptr) + interval * 24 * 60 * 60; // Calculate new due date
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) == SQLITE_OK) {
+        sqlite3_bind_int(stmt, 1, interval);
+        sqlite3_bind_double(stmt, 2, easeFactor);
+        sqlite3_bind_int(stmt, 3, repetitions);
+        sqlite3_bind_int(stmt, 4, lapses);
+        sqlite3_bind_int(stmt, 5, dueDate);
+        sqlite3_bind_int(stmt, 6, cardId);
+
+        if (sqlite3_step(stmt) == SQLITE_DONE) {
+            std::cout << "Card progress updated successfully.\n";
+            success = true;
+        } else {
+            std::cerr << "Error updating card progress: " << sqlite3_errmsg(db) << std::endl;
+        }
+        sqlite3_finalize(stmt);
+    } else {
+        std::cerr << "Failed to prepare updateCardProgress query: " << sqlite3_errmsg(db) << std::endl;
+    }
+}
+
+std::vector<std::tuple<int, std::string, std::string>> Database::getDueCards(int userId, int deckId) {
+    const char* sql = "SELECT id, question, answer FROM cards WHERE deck_id = ? AND dueDate <= ?;";
+    sqlite3_stmt* stmt;
+    std::vector<std::tuple<int, std::string, std::string>> dueCards;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) == SQLITE_OK) {
+        sqlite3_bind_int(stmt, 1, deckId);
+        sqlite3_bind_int(stmt, 2, std::time(nullptr)); // Current time
+
+        while (sqlite3_step(stmt) == SQLITE_ROW) {
+            int cardId = sqlite3_column_int(stmt, 0);
+            const char* question = (const char*)sqlite3_column_text(stmt, 1);
+            const char* answer = (const char*)sqlite3_column_text(stmt, 2);
+
+            dueCards.emplace_back(cardId, question, answer);
+        }
+        sqlite3_finalize(stmt);
+    } else {
+        std::cerr << "Failed to prepare getDueCards query: " << sqlite3_errmsg(db) << std::endl;
+    }
+
+    return dueCards;
+}
+
+int Database::getUserId(const std::string& username) {
+    const char* sql = "SELECT id FROM users WHERE username = ?;";
+    sqlite3_stmt* stmt;
+    int userId = -1;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) == SQLITE_OK) {
+        sqlite3_bind_text(stmt, 1, username.c_str(), -1, SQLITE_TRANSIENT);
+
+        if (sqlite3_step(stmt) == SQLITE_ROW) {
+            userId = sqlite3_column_int(stmt, 0);
+        }
+        sqlite3_finalize(stmt);
+    } else {
+        std::cerr << "Failed to prepare getUserId query: " << sqlite3_errmsg(db) << std::endl;
+    }
+
+    return userId;
+}

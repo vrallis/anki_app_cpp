@@ -24,8 +24,6 @@ public:
     void listDecks(int userId);
 
     // Card methods
-    void addCard(int deckId, const std::string& question, const std::string& answer);
-    void listCards(int deckId);
     bool hasUsers();
 
     // Study session methods
@@ -33,11 +31,17 @@ public:
     void listStudySessions(int userId);
 
     // Spaced repetition methods
-    std::vector<std::tuple<int, std::string, std::string>> getDueCards(int userId, int deckId);
+   std::vector<std::tuple<int, std::string, std::string>> getDueCards(int userId, int deckId);
     void updateCardProgress(int userId, int cardId, int interval, double easeFactor, int repetitions, int lapses);
 
     bool userOwnsDeck(int userId, int deckId);
     void deleteDeck(int deckId);
+
+    // card management
+    bool addCard(int deckId, const std::string& question, const std::string& answer);
+    bool deleteCard(int cardId);
+    bool editCard(int cardId, const std::string& question, const std::string& answer);
+    void listCards(int deckId);
 
 
 

@@ -13,10 +13,12 @@ add_executable(${PROJECT_NAME}
     src/core/app_logic.cpp
     src/cli/cli.cpp
     src/cli/study_session.cpp
+    src/cli/ascii_art.cpp
     src/file/file_handler.cpp
 )
 
 find_package(SQLite3 REQUIRED)
+
 target_link_libraries(${PROJECT_NAME} PRIVATE SQLite::SQLite3)
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 

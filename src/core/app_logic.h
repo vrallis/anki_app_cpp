@@ -19,6 +19,8 @@ public:
     bool importDeck(int userId, const std::string& filePath);
 
     void addCard(int deckId, const std::string& question, const std::string& answer);
+    void editCard(int cardId, const std::string& newQuestion, const std::string& newAnswer);
+    void removeCard(int cardId);
     void listCards(int deckId);
     int getUserId(const std::string& username);
 
@@ -27,10 +29,9 @@ public:
     void updateCardProgress(int userId, int cardId, int grade);
     bool doesUserOwnDeck(int userId, int deckId);
 
-
 private:
     Database& db;
     FileHandler fileHandler;
 };
 
-#endif
+#endif // APP_LOGIC_H

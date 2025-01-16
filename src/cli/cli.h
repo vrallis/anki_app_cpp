@@ -6,16 +6,19 @@
 class CLI {
 public:
     CLI(AppLogic& app);
+
     void run();
 
 private:
-    AppLogic& app;
     void mainMenu();
-    void userMenu(int userId);
-    void deckMenu(int userId);
     void handleUserCreation();
     void handleLogin();
+    void userMenu(int userId);
+    void deckMenu(int userId);
     void handleStudySession(int userId);
+    void manageCards(int deckId);
+
+    AppLogic& app;
 };
 
-#endif
+#endif // CLI_H

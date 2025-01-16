@@ -4,10 +4,8 @@
 AppLogic::AppLogic(Database& db) : db(db) {}
 
 bool AppLogic::addUser(const std::string& username, const std::string& password) {
-    db.addUser(User(username, password));
-    return true;
+    return db.addUser(User(username, password));
 }
-
 
 bool AppLogic::verifyUser(const std::string& username, const std::string& password) {
     return db.verifyUser(username, password);
@@ -21,8 +19,51 @@ void AppLogic::listDecks(int userId) {
     db.listDecks(userId);
 }
 
+bool AppLogic::deleteDeck(int userId, int deckId) {
+    if (db.userOwnsDeck(userId, deckId)) {
+        db.deleteDeck(deckId);
+        return true;
+    } else {
+        std::cerr << "Error: User " << userId << " does not own deck " << deckId << "." << std::endl;
+        return false;
+    }
+}
+
+bool AppLogic::importDeck(int userId, const std::string& filePath) {
+    auto cards = fileHandler.importCards(filePath);
+    if (cards.empty()) {
+        std::cerr << "No valid cards to import from file: " << filePath << std::endl;
+        return false;
+    }
+
+    std::string deckName;
+    std::cout << "Enter a name for the imported deck: ";
+    std::cin >> deckName;
+
+    int deckId = db.createDeck(userId, deckName);
+    if (deckId == -1) {
+        std::cerr << "Failed to create deck." << std::endl;
+        return false;
+    }
+
+    for (const auto& [question, answer] : cards) {
+        db.addCard(deckId, question, answer);
+    }
+
+    std::cout << "Deck '" << deckName << "' imported successfully with " << cards.size() << " cards.\n";
+    return true;
+}
+
 void AppLogic::addCard(int deckId, const std::string& question, const std::string& answer) {
     db.addCard(deckId, question, answer);
+}
+
+void AppLogic::editCard(int cardId, const std::string& newQuestion, const std::string& newAnswer) {
+    db.editCard(cardId, newQuestion, newAnswer);
+}
+
+void AppLogic::removeCard(int cardId) {
+    db.deleteCard(cardId);
 }
 
 void AppLogic::listCards(int deckId) {
@@ -36,7 +77,6 @@ int AppLogic::getUserId(const std::string& username) {
 bool AppLogic::doesUserOwnDeck(int userId, int deckId) {
     return db.userOwnsDeck(userId, deckId);
 }
-
 
 void AppLogic::studyDeck(int userId, int deckId) {
     auto dueCards = db.getDueCards(userId, deckId);
@@ -63,6 +103,7 @@ void AppLogic::studyDeck(int userId, int deckId) {
         } else {
             repetitions++;
             easeFactor += (0.1 - (3 - grade) * (0.08 + (3 - grade) * 0.02));
+            easeFactor = std::max(1.3, easeFactor); // drop factor need to not be infinite
             interval *= easeFactor;
         }
 
@@ -97,44 +138,3 @@ void AppLogic::updateCardProgress(int userId, int cardId, int grade) {
 
     db.updateCardProgress(userId, cardId, interval, easeFactor, repetitions, lapses);
 }
-
-bool AppLogic::importDeck(int userId, const std::string& filePath) {
-    auto cards = fileHandler.importCards(filePath);
-    if (cards.empty()) {
-        std::cerr << "No valid cards to import from file: " << filePath << std::endl;
-        return false;
-    }
-
-    std::string deckName;
-    std::cout << "Enter a name for the imported deck: ";
-    std::cin >> deckName;
-
-    int deckId = db.createDeck(userId, deckName);
-    if (deckId == -1) {
-        std::cerr << "Failed to create deck." << std::endl;
-        return false;
-    }
-
-    for (const auto& [question, answer] : cards) {
-        db.addCard(deckId, question, answer);
-    }
-
-    std::cout << "Deck '" << deckName << "' imported successfully with " << cards.size() << " cards.\n";
-    return true;
-}
-
-
-
-bool AppLogic::deleteDeck(int userId, int deckId) {
-    if (db.userOwnsDeck(userId, deckId)) {
-        db.deleteDeck(deckId);
-        return true;
-    } else {
-        std::cerr << "Error: User " << userId << " does not own deck " << deckId << "." << std::endl;
-        return false;
-    }
-}
-
-
-
-
