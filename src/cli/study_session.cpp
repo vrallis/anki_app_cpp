@@ -1,8 +1,8 @@
 #include "study_session.h"
 #include <iostream>
 
-StudySession::StudySession(AppLogic& app, int userId, int deckId)
-    : app(app), userId(userId), deckId(deckId) {}
+StudySession::StudySession(AppLogic& app, SoundManager& soundManager, int userId, int deckId)
+    : app(app), soundManager(soundManager), userId(userId), deckId(deckId) {}
 
 void StudySession::start() {
     // Check if the user owns the deck
@@ -50,5 +50,10 @@ void StudySession::reviewCard(int cardId, const std::string& question, const std
     }
 
     app.updateCardProgress(userId, cardId, grade);
-}
 
+    if (grade > 0) {
+        soundManager.playSound("correct");
+    } else {
+        soundManager.playSound("incorrect");
+    }
+}

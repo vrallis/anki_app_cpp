@@ -3,12 +3,39 @@
 #include "ascii_art.h"
 #include <iostream>
 #include <string>
+#include <filesystem>
 #include "study_session.h"
 
-CLI::CLI(AppLogic& app) : app(app) {}
+bool CLI::running = true;
+
+CLI::CLI(AppLogic& app) : app(app) {
+    // Print the current working directory
+    std::cout << "Current working directory: " << std::filesystem::current_path() << std::endl;
+
+    // // Check if the sound files exist
+    // if (!std::filesystem::exists("../src/assets/sounds/click.wav")) {
+    //     std::cerr << "File not found: ../src/assets/sounds/click.wav" << std::endl;
+    // }
+    // if (!std::filesystem::exists("../src/assets/sounds/correct.wav")) {
+    //     std::cerr << "File not found: ../src/assets/sounds/correct.wav" << std::endl;
+    // }
+    // if (!std::filesystem::exists("../src/assets/sounds/incorrect.wav")) {
+    //     std::cerr << "File not found: ../src/assets/sounds/incorrect.wav" << std::endl;
+    // }
+
+    // if (!soundManager.loadSound("../src/assets/sounds/click.wav", "click")) {
+    //     std::cerr << "Error loading click sound." << std::endl;
+    // }
+    // if (!soundManager.loadSound("../src/assets/sounds/correct.wav", "correct")) {
+    //     std::cerr << "Error loading correct sound." << std::endl;
+    // }
+    // if (!soundManager.loadSound("../src/assets/sounds/incorrect.wav", "incorrect")) {
+    //     std::cerr << "Error loading incorrect sound." << std::endl;
+    // }
+}
 
 void CLI::run() {
-    while (true) {
+    while (running) {
         mainMenu();
     }
 }
@@ -21,7 +48,14 @@ void CLI::mainMenu() {
 
     int choice;
     std::cout << "Enter your choice: ";
-    std::cin >> choice;
+    if (!(std::cin >> choice)) {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "Invalid input. Try again." << std::endl;
+        return;
+    }
+
+    soundManager.playSound("click");
 
     switch (choice) {
     case 1:
@@ -32,7 +66,8 @@ void CLI::mainMenu() {
         break;
     case 3:
         std::cout << "Exiting..." << std::endl;
-        exit(0);
+        running = false;
+        break;
     default:
         std::cout << "Invalid choice. Try again." << std::endl;
     }
@@ -69,7 +104,7 @@ void CLI::handleLogin() {
 }
 
 void CLI::userMenu(int userId) {
-    while (true) {
+    while (running) {
         std::cout << generateAsciiArt("User Menu") << std::endl;
         std::cout << "1. Deck Management" << std::endl;
         std::cout << "2. Start Study Session" << std::endl;
@@ -77,7 +112,14 @@ void CLI::userMenu(int userId) {
 
         int choice;
         std::cout << "Enter your choice: ";
-        std::cin >> choice;
+        if (!(std::cin >> choice)) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Invalid input. Try again." << std::endl;
+            continue;
+        }
+
+        soundManager.playSound("click");
 
         switch (choice) {
         case 1:
@@ -95,7 +137,7 @@ void CLI::userMenu(int userId) {
 }
 
 void CLI::deckMenu(int userId) {
-    while (true) {
+    while (running) {
         std::cout << generateAsciiArt("Deck Management") << std::endl;
         std::cout << "1. Create Deck" << std::endl;
         std::cout << "2. Delete Deck" << std::endl;
@@ -107,7 +149,14 @@ void CLI::deckMenu(int userId) {
 
         int choice;
         std::cout << "Enter your choice: ";
-        std::cin >> choice;
+        if (!(std::cin >> choice)) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Invalid input. Try again." << std::endl;
+            continue;
+        }
+
+        soundManager.playSound("click");
 
         switch (choice) {
         case 1: {
@@ -170,7 +219,7 @@ void CLI::deckMenu(int userId) {
 }
 
 void CLI::manageCards(int deckId) {
-    while (true) {
+    while (running) {
         std::cout << generateAsciiArt("Manage Cards") << std::endl;
         std::cout << "1. Add Card" << std::endl;
         std::cout << "2. Edit Card" << std::endl;
@@ -180,7 +229,14 @@ void CLI::manageCards(int deckId) {
 
         int choice;
         std::cout << "Enter your choice: ";
-        std::cin >> choice;
+        if (!(std::cin >> choice)) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Invalid input. Try again." << std::endl;
+            continue;
+        }
+
+        soundManager.playSound("click");
 
         switch (choice) {
         case 1: {
@@ -233,7 +289,7 @@ void CLI::handleStudySession(int userId) {
     std::cin >> deckId;
 
     if (app.doesUserOwnDeck(userId, deckId)) {
-        StudySession session(app, userId, deckId);
+        StudySession session(app, soundManager, userId, deckId);
         session.start();
     } else {
         std::cout << "You do not own this deck or it does not exist." << std::endl;

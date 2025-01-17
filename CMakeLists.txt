@@ -15,12 +15,26 @@ add_executable(${PROJECT_NAME}
     src/cli/study_session.cpp
     src/cli/ascii_art.cpp
     src/file/file_handler.cpp
+    src/sound/sound_manager.cpp
 )
+
+# Manually specify the paths to SDL2 and SDL2_mixer
+set(SDL2_INCLUDE_DIR "/usr/include/SDL2")
+set(SDL2_LIBRARY "/usr/lib/x86_64-linux-gnu/libSDL2.so")
+set(SDL2_MIXER_INCLUDE_DIR "/usr/include/SDL2")
+set(SDL2_MIXER_LIBRARY "/usr/lib/x86_64-linux-gnu/libSDL2_mixer.so")
+
+include_directories(${SDL2_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIR})
+link_directories("/usr/lib/x86_64-linux-gnu")
 
 find_package(SQLite3 REQUIRED)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE SQLite::SQLite3)
-target_include_directories(${PROJECT_NAME} PRIVATE src)
+# Use pkg-config to find Wayland libraries
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(WAYLAND REQUIRED wayland-client wayland-cursor wayland-egl xkbcommon libdecor-0 wayland-server expat)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE SQLite::SQLite3 ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${WAYLAND_LIBRARIES_LDFLAGS} -lpthread -ldl)
+target_include_directories(${PROJECT_NAME} PRIVATE src ${WAYLAND_INCLUDE_DIRS})
 
 # Enable testing
 enable_testing()
@@ -49,5 +63,5 @@ add_executable(runTests
 )
 
 target_include_directories(runTests PRIVATE ${CMAKE_SOURCE_DIR}/src)
-target_link_libraries(runTests Catch2::Catch2 SQLite::SQLite3)
+target_link_libraries(runTests PRIVATE SQLite::SQLite3 ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${WAYLAND_LIBRARIES_LDFLAGS} Catch2::Catch2 -lpthread -ldl)
 add_test(NAME runTests COMMAND runTests)

@@ -46,9 +46,6 @@ public:
 
     time_t getNextReviewDate(int deckId);
 
-
-
-
 private:
     sqlite3* db;
 

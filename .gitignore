@@ -51,6 +51,7 @@ build/anki_app.db
 build/.cmake
 build/CMakeFiles
 build/anki_app_cpp
+build/test.db
 
 ### CMake Patch ###
 # External projects
