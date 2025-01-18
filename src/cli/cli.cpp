@@ -31,16 +31,18 @@ CLI::CLI(AppLogic& app) : app(app), enableSounds(true) {
 }
 
 void CLI::loadConfig() {
-    std::ifstream configFile("config.json");
+    std::filesystem::path exePath = std::filesystem::current_path();
+    std::filesystem::path configPath = exePath / "config.json";
+
+    std::ifstream configFile(configPath);
     if (configFile.is_open()) {
         json config;
         configFile >> config;
         enableSounds = config.value("enable_sounds", true);
     } else {
-        std::cerr << "Could not open config file. Using default settings." << std::endl;
+        std::cerr << "Could not open config file at " << configPath << ". Using default settings." << std::endl;
     }
 }
-
 void CLI::run() {
     while (running) {
         mainMenu();
