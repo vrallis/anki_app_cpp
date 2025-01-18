@@ -1,0 +1,134 @@
+\hypertarget{classCLI}{}\doxysection{CLI Class Reference}
+\label{classCLI}\index{CLI@{CLI}}
+
+
+Constructs a new \mbox{\hyperlink{classCLI}{CLI}} object.  
+
+
+
+
+{\ttfamily \#include $<$cli.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classCLI_a4b0813210ed28212443f4652f1b5b202}{CLI}} (\mbox{\hyperlink{classAppLogic}{App\+Logic}} \&app)
+\begin{DoxyCompactList}\small\item\em Constructs a new \mbox{\hyperlink{classCLI}{CLI}} object. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classCLI_aeefc8cd81999836a90c2cfaced6177f1}{run}} ()
+\begin{DoxyCompactList}\small\item\em Runs the command line interface (\mbox{\hyperlink{classCLI}{CLI}}) main loop. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Constructs a new \mbox{\hyperlink{classCLI}{CLI}} object. 
+
+Command Line Interface for the application.
+
+
+\begin{DoxyParams}{Parameters}
+{\em app} & Reference to the application logic.\\
+\hline
+\end{DoxyParams}
+Runs the \mbox{\hyperlink{classCLI}{CLI}}.
+
+This function starts the command line interface and manages the main loop.
+
+Displays the main menu.
+
+This function presents the main menu options to the user.
+
+Handles user creation.
+
+This function manages the process of creating a new user.
+
+Handles user login.
+
+This function manages the process of logging in an existing user.
+
+Displays the user menu.
+
+
+\begin{DoxyParams}{Parameters}
+{\em user\+Id} & The ID of the logged-\/in user.\\
+\hline
+\end{DoxyParams}
+This function presents the user-\/specific menu options.
+
+Displays the deck menu.
+
+
+\begin{DoxyParams}{Parameters}
+{\em user\+Id} & The ID of the logged-\/in user.\\
+\hline
+\end{DoxyParams}
+This function presents the deck management options to the user.
+
+Manages cards within a deck.
+
+
+\begin{DoxyParams}{Parameters}
+{\em deck\+Id} & The ID of the deck.\\
+\hline
+\end{DoxyParams}
+This function allows the user to manage cards within the specified deck.
+
+Handles a study session.
+
+
+\begin{DoxyParams}{Parameters}
+{\em user\+Id} & The ID of the logged-\/in user.\\
+\hline
+\end{DoxyParams}
+This function manages the study session for the user.
+
+Checks the next review date for a deck.
+
+
+\begin{DoxyParams}{Parameters}
+{\em deck\+Id} & The ID of the deck.\\
+\hline
+\end{DoxyParams}
+This function checks and displays the next review date for the specified deck.
+
+Loads the configuration.
+
+This function loads the configuration settings for the \mbox{\hyperlink{classCLI}{CLI}}.
+
+This class provides the command line interface for interacting with the application. It handles user input and manages the flow of the application through various menus. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classCLI_a4b0813210ed28212443f4652f1b5b202}\label{classCLI_a4b0813210ed28212443f4652f1b5b202}} 
+\index{CLI@{CLI}!CLI@{CLI}}
+\index{CLI@{CLI}!CLI@{CLI}}
+\doxysubsubsection{\texorpdfstring{CLI()}{CLI()}}
+{\footnotesize\ttfamily CLI\+::\+CLI (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classAppLogic}{App\+Logic}} \&}]{app }\end{DoxyParamCaption})}
+
+
+
+Constructs a new \mbox{\hyperlink{classCLI}{CLI}} object. 
+
+This constructor initializes the \mbox{\hyperlink{classCLI}{CLI}} object with the given application logic, sets the default value for enabling sounds, and loads the configuration. If sounds are enabled, it attempts to load the necessary sound files.
+
+
+\begin{DoxyParams}{Parameters}
+{\em app} & Reference to the application logic object. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classCLI_aeefc8cd81999836a90c2cfaced6177f1}\label{classCLI_aeefc8cd81999836a90c2cfaced6177f1}} 
+\index{CLI@{CLI}!run@{run}}
+\index{run@{run}!CLI@{CLI}}
+\doxysubsubsection{\texorpdfstring{run()}{run()}}
+{\footnotesize\ttfamily void CLI\+::run (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Runs the command line interface (\mbox{\hyperlink{classCLI}{CLI}}) main loop. 
+
+This function keeps the \mbox{\hyperlink{classCLI}{CLI}} running by continuously displaying the main menu as long as the {\ttfamily running} flag is set to true. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/cli/cli.\+h\item 
+src/cli/cli.\+cpp\end{DoxyCompactItemize}

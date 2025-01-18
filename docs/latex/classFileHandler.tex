@@ -1,0 +1,60 @@
+\hypertarget{classFileHandler}{}\doxysection{File\+Handler Class Reference}
+\label{classFileHandler}\index{FileHandler@{FileHandler}}
+
+
+Imports cards from a specified file.  
+
+
+
+
+{\ttfamily \#include $<$file\+\_\+handler.\+h$>$}
+
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static std\+::vector$<$ std\+::pair$<$ std\+::string, std\+::string $>$ $>$ \mbox{\hyperlink{classFileHandler_a645fa9e2d6b26d04b9364c5c5cb333ee}{import\+Cards}} (const std\+::string \&file\+Path)
+\begin{DoxyCompactList}\small\item\em Imports cards from a specified file. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Imports cards from a specified file. 
+
+A class responsible for handling file operations related to card import.
+
+
+\begin{DoxyParams}{Parameters}
+{\em file\+Path} & The path to the file from which cards are to be imported. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A vector of pairs, where each pair contains a question and its corresponding answer. 
+\end{DoxyReturn}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classFileHandler_a645fa9e2d6b26d04b9364c5c5cb333ee}\label{classFileHandler_a645fa9e2d6b26d04b9364c5c5cb333ee}} 
+\index{FileHandler@{FileHandler}!importCards@{importCards}}
+\index{importCards@{importCards}!FileHandler@{FileHandler}}
+\doxysubsubsection{\texorpdfstring{importCards()}{importCards()}}
+{\footnotesize\ttfamily std\+::vector$<$ std\+::pair$<$ std\+::string, std\+::string $>$ $>$ File\+Handler\+::import\+Cards (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{file\+Path }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Imports cards from a specified file. 
+
+This function reads a file containing card data, where each line represents a card with a question and an answer separated by a comma. It parses the file and stores the cards in a vector of pairs, where each pair consists of a question and an answer.
+
+
+\begin{DoxyParams}{Parameters}
+{\em file\+Path} & The path to the file containing the card data. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A vector of pairs, where each pair contains a question and an answer. If the file cannot be opened or if there are lines with invalid format, the function will return an empty vector or a partially filled vector. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/file/file\+\_\+handler.\+h\item 
+src/file/file\+\_\+handler.\+cpp\end{DoxyCompactItemize}

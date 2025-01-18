@@ -1,0 +1,114 @@
+\hypertarget{classSoundManager}{}\doxysection{Sound\+Manager Class Reference}
+\label{classSoundManager}\index{SoundManager@{SoundManager}}
+
+
+Manages the loading and playing of sound effects.  
+
+
+
+
+{\ttfamily \#include $<$sound\+\_\+manager.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classSoundManager_abcc1fbf3488be5788a42c9a4fe56df35}{Sound\+Manager}} ()
+\begin{DoxyCompactList}\small\item\em Constructs a new \mbox{\hyperlink{classSoundManager}{Sound\+Manager}} object and initializes the SDL audio subsystem. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classSoundManager_ad5dbf8eab22db48ff8f3db51b02f8938}{$\sim$\+Sound\+Manager}} ()
+\begin{DoxyCompactList}\small\item\em Destructor for the \mbox{\hyperlink{classSoundManager}{Sound\+Manager}} class. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classSoundManager_ad206bd962647591c50338213f2187d03}{load\+Sound}} (const std\+::string \&path, const std\+::string \&sound\+Name)
+\begin{DoxyCompactList}\small\item\em Loads a sound file and stores it in the sound manager. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classSoundManager_a645fdf90122892fd3117ab36c94c8142}{play\+Sound}} (const std\+::string \&sound\+Name)
+\begin{DoxyCompactList}\small\item\em Plays the specified sound if it exists in the sound manager. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Manages the loading and playing of sound effects. 
+
+The \mbox{\hyperlink{classSoundManager}{Sound\+Manager}} class provides functionality to load sound effects from files and play them using their associated names. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classSoundManager_abcc1fbf3488be5788a42c9a4fe56df35}\label{classSoundManager_abcc1fbf3488be5788a42c9a4fe56df35}} 
+\index{SoundManager@{SoundManager}!SoundManager@{SoundManager}}
+\index{SoundManager@{SoundManager}!SoundManager@{SoundManager}}
+\doxysubsubsection{\texorpdfstring{SoundManager()}{SoundManager()}}
+{\footnotesize\ttfamily Sound\+Manager\+::\+Sound\+Manager (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Constructs a new \mbox{\hyperlink{classSoundManager}{Sound\+Manager}} object and initializes the SDL audio subsystem. 
+
+This constructor initializes the SDL audio subsystem and the SDL\+\_\+mixer library. If SDL or SDL\+\_\+mixer fails to initialize, an error message is printed to the standard error stream.
+
+\begin{DoxyNote}{Note}
+SDL\+\_\+\+Init(\+SDL\+\_\+\+INIT\+\_\+\+AUDIO) initializes the SDL audio subsystem. 
+
+Mix\+\_\+\+Open\+Audio(44100, MIX\+\_\+\+DEFAULT\+\_\+\+FORMAT, 2, 2048) initializes the SDL\+\_\+mixer library with a frequency of 44100 Hz, the default format, 2 channels (stereo), and a chunk size of 2048 bytes.
+\end{DoxyNote}
+\begin{DoxySeeAlso}{See also}
+SDL\+\_\+\+Init 
+
+Mix\+\_\+\+Open\+Audio 
+
+SDL\+\_\+\+Get\+Error 
+
+Mix\+\_\+\+Get\+Error 
+\end{DoxySeeAlso}
+\mbox{\Hypertarget{classSoundManager_ad5dbf8eab22db48ff8f3db51b02f8938}\label{classSoundManager_ad5dbf8eab22db48ff8f3db51b02f8938}} 
+\index{SoundManager@{SoundManager}!````~SoundManager@{$\sim$SoundManager}}
+\index{````~SoundManager@{$\sim$SoundManager}!SoundManager@{SoundManager}}
+\doxysubsubsection{\texorpdfstring{$\sim$SoundManager()}{~SoundManager()}}
+{\footnotesize\ttfamily Sound\+Manager\+::$\sim$\+Sound\+Manager (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Destructor for the \mbox{\hyperlink{classSoundManager}{Sound\+Manager}} class. 
+
+This destructor is responsible for cleaning up all the resources associated with the \mbox{\hyperlink{classSoundManager}{Sound\+Manager}}. It iterates through the stored sounds, frees each sound chunk, clears the sounds container, and shuts down the audio and SDL subsystems. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classSoundManager_ad206bd962647591c50338213f2187d03}\label{classSoundManager_ad206bd962647591c50338213f2187d03}} 
+\index{SoundManager@{SoundManager}!loadSound@{loadSound}}
+\index{loadSound@{loadSound}!SoundManager@{SoundManager}}
+\doxysubsubsection{\texorpdfstring{loadSound()}{loadSound()}}
+{\footnotesize\ttfamily bool Sound\+Manager\+::load\+Sound (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{path,  }\item[{const std\+::string \&}]{sound\+Name }\end{DoxyParamCaption})}
+
+
+
+Loads a sound file and stores it in the sound manager. 
+
+This function attempts to load a sound file from the specified path and associates it with a given sound name. If the file does not exist or fails to load, an error message is printed to the standard error stream.
+
+
+\begin{DoxyParams}{Parameters}
+{\em path} & The file path to the sound file to be loaded. \\
+\hline
+{\em sound\+Name} & The name to associate with the loaded sound. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the sound file was successfully loaded and stored, false otherwise. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classSoundManager_a645fdf90122892fd3117ab36c94c8142}\label{classSoundManager_a645fdf90122892fd3117ab36c94c8142}} 
+\index{SoundManager@{SoundManager}!playSound@{playSound}}
+\index{playSound@{playSound}!SoundManager@{SoundManager}}
+\doxysubsubsection{\texorpdfstring{playSound()}{playSound()}}
+{\footnotesize\ttfamily void Sound\+Manager\+::play\+Sound (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{sound\+Name }\end{DoxyParamCaption})}
+
+
+
+Plays the specified sound if it exists in the sound manager. 
+
+This function checks if the sound with the given name exists in the sound manager\textquotesingle{}s collection of sounds. If the sound is found, it plays the sound on any available channel. If the sound is not found, it outputs an error message to the standard error stream.
+
+
+\begin{DoxyParams}{Parameters}
+{\em sound\+Name} & The name of the sound to be played. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/sound/sound\+\_\+manager.\+h\item 
+src/sound/sound\+\_\+manager.\+cpp\end{DoxyCompactItemize}

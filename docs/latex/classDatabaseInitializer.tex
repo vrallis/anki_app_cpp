@@ -1,0 +1,74 @@
+\hypertarget{classDatabaseInitializer}{}\doxysection{Database\+Initializer Class Reference}
+\label{classDatabaseInitializer}\index{DatabaseInitializer@{DatabaseInitializer}}
+
+
+A utility class for initializing and checking the state of a database.  
+
+
+
+
+{\ttfamily \#include $<$database\+\_\+initializer.\+h$>$}
+
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{classDatabaseInitializer_a13c869fe25492882c8d013b1d12b5cb0}{initialize}} (\mbox{\hyperlink{classDatabase}{Database}} \&db)
+\begin{DoxyCompactList}\small\item\em Initializes the database by creating necessary tables if they do not exist. \end{DoxyCompactList}\item 
+static bool \mbox{\hyperlink{classDatabaseInitializer_a97295b2daff8c92b3327b7a90714d538}{is\+Database\+Initialized}} (\mbox{\hyperlink{classDatabase}{Database}} \&db)
+\begin{DoxyCompactList}\small\item\em Checks if the database is initialized by verifying the existence of the \textquotesingle{}users\textquotesingle{} table. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A utility class for initializing and checking the state of a database. 
+
+This class provides static methods to initialize a database and to check if a database has already been initialized. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classDatabaseInitializer_a13c869fe25492882c8d013b1d12b5cb0}\label{classDatabaseInitializer_a13c869fe25492882c8d013b1d12b5cb0}} 
+\index{DatabaseInitializer@{DatabaseInitializer}!initialize@{initialize}}
+\index{initialize@{initialize}!DatabaseInitializer@{DatabaseInitializer}}
+\doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
+{\footnotesize\ttfamily void Database\+Initializer\+::initialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classDatabase}{Database}} \&}]{db }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Initializes the database by creating necessary tables if they do not exist. 
+
+This function creates the following tables\+:
+\begin{DoxyItemize}
+\item users\+: Stores user information with columns for id, username, and password.
+\item decks\+: Stores deck information with columns for id, user\+\_\+id, and name. It references the users table and deletes decks if the associated user is deleted.
+\item cards\+: Stores card information with columns for id, deck\+\_\+id, question, answer, interval, ease\+Factor, repetitions, lapses, and due\+Date. It references the decks table and deletes cards if the associated deck is deleted.
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em db} & Reference to the \mbox{\hyperlink{classDatabase}{Database}} object where the tables will be created. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classDatabaseInitializer_a97295b2daff8c92b3327b7a90714d538}\label{classDatabaseInitializer_a97295b2daff8c92b3327b7a90714d538}} 
+\index{DatabaseInitializer@{DatabaseInitializer}!isDatabaseInitialized@{isDatabaseInitialized}}
+\index{isDatabaseInitialized@{isDatabaseInitialized}!DatabaseInitializer@{DatabaseInitializer}}
+\doxysubsubsection{\texorpdfstring{isDatabaseInitialized()}{isDatabaseInitialized()}}
+{\footnotesize\ttfamily bool Database\+Initializer\+::is\+Database\+Initialized (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classDatabase}{Database}} \&}]{db }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Checks if the database is initialized by verifying the existence of the \textquotesingle{}users\textquotesingle{} table. 
+
+This function prepares and executes an SQL statement to check if a table named \textquotesingle{}users\textquotesingle{} exists in the database. It returns true if the table exists, indicating that the database is initialized, and false otherwise.
+
+
+\begin{DoxyParams}{Parameters}
+{\em db} & A reference to the \mbox{\hyperlink{classDatabase}{Database}} object to be checked. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the \textquotesingle{}users\textquotesingle{} table exists in the database, false otherwise. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/core/database\+\_\+initializer.\+h\item 
+src/core/database\+\_\+initializer.\+cpp\end{DoxyCompactItemize}

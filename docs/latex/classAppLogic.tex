@@ -1,0 +1,536 @@
+\hypertarget{classAppLogic}{}\doxysection{App\+Logic Class Reference}
+\label{classAppLogic}\index{AppLogic@{AppLogic}}
+
+
+Handles the core logic of the application, including user management, deck management, and card management.  
+
+
+
+
+{\ttfamily \#include $<$app\+\_\+logic.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classAppLogic_a1c3eebb5a37f8406b88c87c3378e406c}{App\+Logic}} (\mbox{\hyperlink{classDatabase}{Database}} \&db)
+\begin{DoxyCompactList}\small\item\em Constructs an \mbox{\hyperlink{classAppLogic}{App\+Logic}} object with a reference to a \mbox{\hyperlink{classDatabase}{Database}} object. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classAppLogic_acac50416a0d21b87f1bfc9f87a51f263}{add\+User}} (const std\+::string \&username, const std\+::string \&password)
+\begin{DoxyCompactList}\small\item\em Adds a new user to the application. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classAppLogic_addfd8fda36a3668060d4dd7959091b85}{verify\+User}} (const std\+::string \&username, const std\+::string \&password)
+\begin{DoxyCompactList}\small\item\em Verifies the user\textquotesingle{}s credentials. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classAppLogic_a382266efee8115574d43f65a1e31d3cb}{create\+Deck}} (int user\+Id, const std\+::string \&deck\+Name)
+\begin{DoxyCompactList}\small\item\em Creates a new deck for a user. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classAppLogic_a89d2366469835adbf352fed7645d5f64}{list\+Decks}} (int user\+Id)
+\begin{DoxyCompactList}\small\item\em Lists all decks for a given user. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classAppLogic_adaa751a9e025530c91b302e90e1edecf}{delete\+Deck}} (int user\+Id, int deck\+Id)
+\begin{DoxyCompactList}\small\item\em Deletes a deck owned by a user. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classAppLogic_acfc0df13a4c9c75b8be410c53aec035d}{import\+Deck}} (int user\+Id, const std\+::string \&file\+Path)
+\begin{DoxyCompactList}\small\item\em Imports a deck of cards from a specified file and associates it with a user. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classAppLogic_a4924a69a4cf6a56c2fea930600b68944}{add\+Card}} (int deck\+Id, const std\+::string \&question, const std\+::string \&answer)
+\begin{DoxyCompactList}\small\item\em Adds a new card to the specified deck. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classAppLogic_a8c8521e12cf906df4d51482ee5a2d3e5}{edit\+Card}} (int card\+Id, const std\+::string \&new\+Question, const std\+::string \&new\+Answer)
+\begin{DoxyCompactList}\small\item\em Edits the content of a card in the database. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classAppLogic_adde7f4b5032c5b6a493e8c09d63b270d}{remove\+Card}} (int card\+Id)
+\begin{DoxyCompactList}\small\item\em Removes a card from the database. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classAppLogic_a303d41b91d34b600045af478805733f5}{list\+Cards}} (int deck\+Id)
+\begin{DoxyCompactList}\small\item\em Lists all cards in the specified deck. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{classAppLogic_a30d6ed68a420d1ccf87061b8cec6f000}{get\+User\+Id}} (const std\+::string \&username)
+\begin{DoxyCompactList}\small\item\em Retrieves the user ID associated with the given username. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classAppLogic_a65dfa9622ac0a7da8e7e1d116ddbb1cc}{study\+Deck}} (int user\+Id, int deck\+Id)
+\begin{DoxyCompactList}\small\item\em Conducts a study session for a specific deck for a given user. \end{DoxyCompactList}\item 
+std\+::vector$<$ std\+::tuple$<$ int, std\+::string, std\+::string $>$ $>$ \mbox{\hyperlink{classAppLogic_a9ad4bbb8bd17eaae639a09d0b16a80ba}{get\+Due\+Cards}} (int user\+Id, int deck\+Id)
+\begin{DoxyCompactList}\small\item\em Retrieves a list of due cards for a specific user and deck. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classAppLogic_af3b152858d25f3a643b1cb066225451c}{update\+Card\+Progress}} (int user\+Id, int card\+Id, int grade)
+\begin{DoxyCompactList}\small\item\em Updates the progress of a card for a specific user based on the grade provided. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classAppLogic_ae012dde911a7e3c928e8df971a592e26}{does\+User\+Own\+Deck}} (int user\+Id, int deck\+Id)
+\begin{DoxyCompactList}\small\item\em Checks if a user owns a specific deck. \end{DoxyCompactList}\item 
+time\+\_\+t \mbox{\hyperlink{classAppLogic_a3a722abe0fff0c945e7eaa7470a6f0c1}{get\+Next\+Review\+Date}} (int deck\+Id)
+\begin{DoxyCompactList}\small\item\em Retrieves the next review date for a given deck. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Handles the core logic of the application, including user management, deck management, and card management. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em db} & Reference to the \mbox{\hyperlink{classDatabase}{Database}} object for database operations. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classAppLogic_a1c3eebb5a37f8406b88c87c3378e406c}\label{classAppLogic_a1c3eebb5a37f8406b88c87c3378e406c}} 
+\index{AppLogic@{AppLogic}!AppLogic@{AppLogic}}
+\index{AppLogic@{AppLogic}!AppLogic@{AppLogic}}
+\doxysubsubsection{\texorpdfstring{AppLogic()}{AppLogic()}}
+{\footnotesize\ttfamily App\+Logic\+::\+App\+Logic (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classDatabase}{Database}} \&}]{db }\end{DoxyParamCaption})}
+
+
+
+Constructs an \mbox{\hyperlink{classAppLogic}{App\+Logic}} object with a reference to a \mbox{\hyperlink{classDatabase}{Database}} object. 
+
+Constructor that initializes the \mbox{\hyperlink{classAppLogic}{App\+Logic}} with a reference to the database.
+
+
+\begin{DoxyParams}{Parameters}
+{\em db} & A reference to a \mbox{\hyperlink{classDatabase}{Database}} object that will be used by the \mbox{\hyperlink{classAppLogic}{App\+Logic}}. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classAppLogic_a4924a69a4cf6a56c2fea930600b68944}\label{classAppLogic_a4924a69a4cf6a56c2fea930600b68944}} 
+\index{AppLogic@{AppLogic}!addCard@{addCard}}
+\index{addCard@{addCard}!AppLogic@{AppLogic}}
+\doxysubsubsection{\texorpdfstring{addCard()}{addCard()}}
+{\footnotesize\ttfamily void App\+Logic\+::add\+Card (\begin{DoxyParamCaption}\item[{int}]{deck\+Id,  }\item[{const std\+::string \&}]{question,  }\item[{const std\+::string \&}]{answer }\end{DoxyParamCaption})}
+
+
+
+Adds a new card to the specified deck. 
+
+This function adds a new card with the given question and answer to the deck identified by the provided deck ID.
+
+
+\begin{DoxyParams}{Parameters}
+{\em deck\+Id} & The ID of the deck to which the card will be added. \\
+\hline
+{\em question} & The question text for the new card. \\
+\hline
+{\em answer} & The answer text for the new card.\\
+\hline
+{\em deck\+Id} & The ID of the deck. \\
+\hline
+{\em question} & The question of the new card. \\
+\hline
+{\em answer} & The answer of the new card. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classAppLogic_acac50416a0d21b87f1bfc9f87a51f263}\label{classAppLogic_acac50416a0d21b87f1bfc9f87a51f263}} 
+\index{AppLogic@{AppLogic}!addUser@{addUser}}
+\index{addUser@{addUser}!AppLogic@{AppLogic}}
+\doxysubsubsection{\texorpdfstring{addUser()}{addUser()}}
+{\footnotesize\ttfamily bool App\+Logic\+::add\+User (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{username,  }\item[{const std\+::string \&}]{password }\end{DoxyParamCaption})}
+
+
+
+Adds a new user to the application. 
+
+Adds a new user to the database.
+
+This function creates a new user with the provided username and password, and adds the user to the database.
+
+
+\begin{DoxyParams}{Parameters}
+{\em username} & The username of the new user. \\
+\hline
+{\em password} & The password of the new user. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the user was successfully added to the database, false otherwise.
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em username} & The username of the new user. \\
+\hline
+{\em password} & The password of the new user. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the user was added successfully, false otherwise. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classAppLogic_a382266efee8115574d43f65a1e31d3cb}\label{classAppLogic_a382266efee8115574d43f65a1e31d3cb}} 
+\index{AppLogic@{AppLogic}!createDeck@{createDeck}}
+\index{createDeck@{createDeck}!AppLogic@{AppLogic}}
+\doxysubsubsection{\texorpdfstring{createDeck()}{createDeck()}}
+{\footnotesize\ttfamily void App\+Logic\+::create\+Deck (\begin{DoxyParamCaption}\item[{int}]{user\+Id,  }\item[{const std\+::string \&}]{deck\+Name }\end{DoxyParamCaption})}
+
+
+
+Creates a new deck for a user. 
+
+Creates a new deck for the specified user.
+
+This function creates a new deck in the database for the specified user.
+
+
+\begin{DoxyParams}{Parameters}
+{\em user\+Id} & The ID of the user for whom the deck is being created. \\
+\hline
+{\em deck\+Name} & The name of the deck to be created.\\
+\hline
+{\em user\+Id} & The ID of the user. \\
+\hline
+{\em deck\+Name} & The name of the new deck. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classAppLogic_adaa751a9e025530c91b302e90e1edecf}\label{classAppLogic_adaa751a9e025530c91b302e90e1edecf}} 
+\index{AppLogic@{AppLogic}!deleteDeck@{deleteDeck}}
+\index{deleteDeck@{deleteDeck}!AppLogic@{AppLogic}}
+\doxysubsubsection{\texorpdfstring{deleteDeck()}{deleteDeck()}}
+{\footnotesize\ttfamily bool App\+Logic\+::delete\+Deck (\begin{DoxyParamCaption}\item[{int}]{user\+Id,  }\item[{int}]{deck\+Id }\end{DoxyParamCaption})}
+
+
+
+Deletes a deck owned by a user. 
+
+Deletes a deck for the specified user.
+
+This function checks if the specified user owns the deck with the given deck ID. If the user owns the deck, it deletes the deck from the database and returns true. Otherwise, it logs an error message and returns false.
+
+
+\begin{DoxyParams}{Parameters}
+{\em user\+Id} & The ID of the user attempting to delete the deck. \\
+\hline
+{\em deck\+Id} & The ID of the deck to be deleted. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the deck was successfully deleted, false otherwise.
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em user\+Id} & The ID of the user. \\
+\hline
+{\em deck\+Id} & The ID of the deck to be deleted. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the deck was deleted successfully, false otherwise. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classAppLogic_ae012dde911a7e3c928e8df971a592e26}\label{classAppLogic_ae012dde911a7e3c928e8df971a592e26}} 
+\index{AppLogic@{AppLogic}!doesUserOwnDeck@{doesUserOwnDeck}}
+\index{doesUserOwnDeck@{doesUserOwnDeck}!AppLogic@{AppLogic}}
+\doxysubsubsection{\texorpdfstring{doesUserOwnDeck()}{doesUserOwnDeck()}}
+{\footnotesize\ttfamily bool App\+Logic\+::does\+User\+Own\+Deck (\begin{DoxyParamCaption}\item[{int}]{user\+Id,  }\item[{int}]{deck\+Id }\end{DoxyParamCaption})}
+
+
+
+Checks if a user owns a specific deck. 
+
+Checks if the specified user owns the specified deck.
+
+This function queries the database to determine if the user with the given user\+Id owns the deck with the given deck\+Id.
+
+
+\begin{DoxyParams}{Parameters}
+{\em user\+Id} & The ID of the user. \\
+\hline
+{\em deck\+Id} & The ID of the deck. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the user owns the deck, false otherwise.
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em user\+Id} & The ID of the user. \\
+\hline
+{\em deck\+Id} & The ID of the deck. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the user owns the deck, false otherwise. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classAppLogic_a8c8521e12cf906df4d51482ee5a2d3e5}\label{classAppLogic_a8c8521e12cf906df4d51482ee5a2d3e5}} 
+\index{AppLogic@{AppLogic}!editCard@{editCard}}
+\index{editCard@{editCard}!AppLogic@{AppLogic}}
+\doxysubsubsection{\texorpdfstring{editCard()}{editCard()}}
+{\footnotesize\ttfamily void App\+Logic\+::edit\+Card (\begin{DoxyParamCaption}\item[{int}]{card\+Id,  }\item[{const std\+::string \&}]{new\+Question,  }\item[{const std\+::string \&}]{new\+Answer }\end{DoxyParamCaption})}
+
+
+
+Edits the content of a card in the database. 
+
+Edits an existing card.
+
+This function updates the question and answer of a card identified by its ID.
+
+
+\begin{DoxyParams}{Parameters}
+{\em card\+Id} & The unique identifier of the card to be edited. \\
+\hline
+{\em new\+Question} & The new question text for the card. \\
+\hline
+{\em new\+Answer} & The new answer text for the card.\\
+\hline
+{\em card\+Id} & The ID of the card to be edited. \\
+\hline
+{\em new\+Question} & The new question for the card. \\
+\hline
+{\em new\+Answer} & The new answer for the card. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classAppLogic_a9ad4bbb8bd17eaae639a09d0b16a80ba}\label{classAppLogic_a9ad4bbb8bd17eaae639a09d0b16a80ba}} 
+\index{AppLogic@{AppLogic}!getDueCards@{getDueCards}}
+\index{getDueCards@{getDueCards}!AppLogic@{AppLogic}}
+\doxysubsubsection{\texorpdfstring{getDueCards()}{getDueCards()}}
+{\footnotesize\ttfamily std\+::vector$<$ std\+::tuple$<$ int, std\+::string, std\+::string $>$ $>$ App\+Logic\+::get\+Due\+Cards (\begin{DoxyParamCaption}\item[{int}]{user\+Id,  }\item[{int}]{deck\+Id }\end{DoxyParamCaption})}
+
+
+
+Retrieves a list of due cards for a specific user and deck. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em user\+Id} & The ID of the user. \\
+\hline
+{\em deck\+Id} & The ID of the deck. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A vector of tuples, where each tuple contains\+:
+\begin{DoxyItemize}
+\item An integer representing the card ID.
+\item A string representing the card question.
+\item A string representing the card answer. 
+\end{DoxyItemize}
+\end{DoxyReturn}
+\mbox{\Hypertarget{classAppLogic_a3a722abe0fff0c945e7eaa7470a6f0c1}\label{classAppLogic_a3a722abe0fff0c945e7eaa7470a6f0c1}} 
+\index{AppLogic@{AppLogic}!getNextReviewDate@{getNextReviewDate}}
+\index{getNextReviewDate@{getNextReviewDate}!AppLogic@{AppLogic}}
+\doxysubsubsection{\texorpdfstring{getNextReviewDate()}{getNextReviewDate()}}
+{\footnotesize\ttfamily time\+\_\+t App\+Logic\+::get\+Next\+Review\+Date (\begin{DoxyParamCaption}\item[{int}]{deck\+Id }\end{DoxyParamCaption})}
+
+
+
+Retrieves the next review date for a given deck. 
+
+Retrieves the next review date for the specified deck.
+
+This function queries the database to get the next review date for the deck specified by the deck\+Id parameter.
+
+
+\begin{DoxyParams}{Parameters}
+{\em deck\+Id} & The ID of the deck for which to retrieve the next review date. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The next review date as a time\+\_\+t value.
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em deck\+Id} & The ID of the deck. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The next review date as a time\+\_\+t object. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classAppLogic_a30d6ed68a420d1ccf87061b8cec6f000}\label{classAppLogic_a30d6ed68a420d1ccf87061b8cec6f000}} 
+\index{AppLogic@{AppLogic}!getUserId@{getUserId}}
+\index{getUserId@{getUserId}!AppLogic@{AppLogic}}
+\doxysubsubsection{\texorpdfstring{getUserId()}{getUserId()}}
+{\footnotesize\ttfamily int App\+Logic\+::get\+User\+Id (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{username }\end{DoxyParamCaption})}
+
+
+
+Retrieves the user ID associated with the given username. 
+
+Retrieves the user ID for the specified username.
+
+This function queries the database to find the user ID corresponding to the provided username.
+
+
+\begin{DoxyParams}{Parameters}
+{\em username} & The username for which to retrieve the user ID. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The user ID associated with the given username.
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em username} & The username of the user. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The user ID. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classAppLogic_acfc0df13a4c9c75b8be410c53aec035d}\label{classAppLogic_acfc0df13a4c9c75b8be410c53aec035d}} 
+\index{AppLogic@{AppLogic}!importDeck@{importDeck}}
+\index{importDeck@{importDeck}!AppLogic@{AppLogic}}
+\doxysubsubsection{\texorpdfstring{importDeck()}{importDeck()}}
+{\footnotesize\ttfamily bool App\+Logic\+::import\+Deck (\begin{DoxyParamCaption}\item[{int}]{user\+Id,  }\item[{const std\+::string \&}]{file\+Path }\end{DoxyParamCaption})}
+
+
+
+Imports a deck of cards from a specified file and associates it with a user. 
+
+Imports a deck from a file for the specified user.
+
+This function reads card data from the provided file path, prompts the user to enter a name for the new deck, creates the deck in the database, and adds the imported cards to the newly created deck.
+
+
+\begin{DoxyParams}{Parameters}
+{\em user\+Id} & The ID of the user who is importing the deck. \\
+\hline
+{\em file\+Path} & The path to the file containing the card data to be imported. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the deck was successfully imported and added to the database, false otherwise.
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em user\+Id} & The ID of the user. \\
+\hline
+{\em file\+Path} & The path to the file containing the deck. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the deck was imported successfully, false otherwise. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classAppLogic_a303d41b91d34b600045af478805733f5}\label{classAppLogic_a303d41b91d34b600045af478805733f5}} 
+\index{AppLogic@{AppLogic}!listCards@{listCards}}
+\index{listCards@{listCards}!AppLogic@{AppLogic}}
+\doxysubsubsection{\texorpdfstring{listCards()}{listCards()}}
+{\footnotesize\ttfamily void App\+Logic\+::list\+Cards (\begin{DoxyParamCaption}\item[{int}]{deck\+Id }\end{DoxyParamCaption})}
+
+
+
+Lists all cards in the specified deck. 
+
+This function retrieves and lists all the cards that belong to the deck identified by the given deck ID.
+
+
+\begin{DoxyParams}{Parameters}
+{\em deck\+Id} & The ID of the deck whose cards are to be listed.\\
+\hline
+{\em deck\+Id} & The ID of the deck. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classAppLogic_a89d2366469835adbf352fed7645d5f64}\label{classAppLogic_a89d2366469835adbf352fed7645d5f64}} 
+\index{AppLogic@{AppLogic}!listDecks@{listDecks}}
+\index{listDecks@{listDecks}!AppLogic@{AppLogic}}
+\doxysubsubsection{\texorpdfstring{listDecks()}{listDecks()}}
+{\footnotesize\ttfamily void App\+Logic\+::list\+Decks (\begin{DoxyParamCaption}\item[{int}]{user\+Id }\end{DoxyParamCaption})}
+
+
+
+Lists all decks for a given user. 
+
+Lists all decks for the specified user.
+
+This function retrieves and lists all the decks associated with the specified user ID.
+
+
+\begin{DoxyParams}{Parameters}
+{\em user\+Id} & The ID of the user whose decks are to be listed.\\
+\hline
+{\em user\+Id} & The ID of the user. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classAppLogic_adde7f4b5032c5b6a493e8c09d63b270d}\label{classAppLogic_adde7f4b5032c5b6a493e8c09d63b270d}} 
+\index{AppLogic@{AppLogic}!removeCard@{removeCard}}
+\index{removeCard@{removeCard}!AppLogic@{AppLogic}}
+\doxysubsubsection{\texorpdfstring{removeCard()}{removeCard()}}
+{\footnotesize\ttfamily void App\+Logic\+::remove\+Card (\begin{DoxyParamCaption}\item[{int}]{card\+Id }\end{DoxyParamCaption})}
+
+
+
+Removes a card from the database. 
+
+Removes a card from the deck.
+
+This function deletes a card from the database using the provided card ID.
+
+
+\begin{DoxyParams}{Parameters}
+{\em card\+Id} & The ID of the card to be removed.\\
+\hline
+{\em card\+Id} & The ID of the card to be removed. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classAppLogic_a65dfa9622ac0a7da8e7e1d116ddbb1cc}\label{classAppLogic_a65dfa9622ac0a7da8e7e1d116ddbb1cc}} 
+\index{AppLogic@{AppLogic}!studyDeck@{studyDeck}}
+\index{studyDeck@{studyDeck}!AppLogic@{AppLogic}}
+\doxysubsubsection{\texorpdfstring{studyDeck()}{studyDeck()}}
+{\footnotesize\ttfamily void App\+Logic\+::study\+Deck (\begin{DoxyParamCaption}\item[{int}]{user\+Id,  }\item[{int}]{deck\+Id }\end{DoxyParamCaption})}
+
+
+
+Conducts a study session for a specific deck for a given user. 
+
+Initiates a study session for the specified deck.
+
+This function retrieves the due cards for the specified user and deck, presents each card\textquotesingle{}s question to the user, and prompts the user to input their answer. After displaying the correct answer, the user is asked to rate their response. Based on the rating, the function updates the card\textquotesingle{}s progress in the database, adjusting the interval, ease factor, repetitions, and lapses accordingly.
+
+
+\begin{DoxyParams}{Parameters}
+{\em user\+Id} & The ID of the user studying the deck. \\
+\hline
+{\em deck\+Id} & The ID of the deck being studied.\\
+\hline
+{\em user\+Id} & The ID of the user. \\
+\hline
+{\em deck\+Id} & The ID of the deck. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classAppLogic_af3b152858d25f3a643b1cb066225451c}\label{classAppLogic_af3b152858d25f3a643b1cb066225451c}} 
+\index{AppLogic@{AppLogic}!updateCardProgress@{updateCardProgress}}
+\index{updateCardProgress@{updateCardProgress}!AppLogic@{AppLogic}}
+\doxysubsubsection{\texorpdfstring{updateCardProgress()}{updateCardProgress()}}
+{\footnotesize\ttfamily void App\+Logic\+::update\+Card\+Progress (\begin{DoxyParamCaption}\item[{int}]{user\+Id,  }\item[{int}]{card\+Id,  }\item[{int}]{grade }\end{DoxyParamCaption})}
+
+
+
+Updates the progress of a card for a specific user based on the grade provided. 
+
+Updates the progress of a card based on the user\textquotesingle{}s performance.
+
+This function updates the interval, ease factor, repetitions, and lapses of a card based on the grade given by the user. The grade must be between 0 and 3, inclusive. If the grade is 0, it indicates a lapse and the interval is reset to 1. For grades 1 to 3, the ease factor is adjusted and the interval is updated accordingly.
+
+
+\begin{DoxyParams}{Parameters}
+{\em user\+Id} & The ID of the user. \\
+\hline
+{\em card\+Id} & The ID of the card. \\
+\hline
+{\em grade} & The grade given by the user (must be between 0 and 3).\\
+\hline
+{\em user\+Id} & The ID of the user. \\
+\hline
+{\em card\+Id} & The ID of the card. \\
+\hline
+{\em grade} & The grade given by the user. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classAppLogic_addfd8fda36a3668060d4dd7959091b85}\label{classAppLogic_addfd8fda36a3668060d4dd7959091b85}} 
+\index{AppLogic@{AppLogic}!verifyUser@{verifyUser}}
+\index{verifyUser@{verifyUser}!AppLogic@{AppLogic}}
+\doxysubsubsection{\texorpdfstring{verifyUser()}{verifyUser()}}
+{\footnotesize\ttfamily bool App\+Logic\+::verify\+User (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{username,  }\item[{const std\+::string \&}]{password }\end{DoxyParamCaption})}
+
+
+
+Verifies the user\textquotesingle{}s credentials. 
+
+This function checks the provided username and password against the database to verify if the user exists and the credentials are correct.
+
+
+\begin{DoxyParams}{Parameters}
+{\em username} & The username of the user to be verified. \\
+\hline
+{\em password} & The password of the user to be verified. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the user credentials are valid, false otherwise.
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em username} & The username of the user. \\
+\hline
+{\em password} & The password of the user. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the credentials are correct, false otherwise. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/core/app\+\_\+logic.\+h\item 
+src/core/app\+\_\+logic.\+cpp\end{DoxyCompactItemize}

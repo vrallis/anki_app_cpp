@@ -1,0 +1,616 @@
+\hypertarget{classDatabase}{}\doxysection{Database Class Reference}
+\label{classDatabase}\index{Database@{Database}}
+
+
+Manages the SQLite database connection and provides methods for user, deck, card, and study session management.  
+
+
+
+
+{\ttfamily \#include $<$database.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classDatabase_ac83c760a516356a6c34d9bb24f5a8801}{Database}} (const std\+::string \&db\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Constructs a \mbox{\hyperlink{classDatabase}{Database}} object and opens a connection to the specified SQLite database. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classDatabase_a84d399a2ad58d69daab9b05330e1316d}{$\sim$\+Database}} ()
+\begin{DoxyCompactList}\small\item\em Destructor for the \mbox{\hyperlink{classDatabase}{Database}} class. \end{DoxyCompactList}\item 
+sqlite3 $\ast$ \mbox{\hyperlink{classDatabase_a4e924ad7804a83b93270f312e688c475}{get\+Db}} () const
+\begin{DoxyCompactList}\small\item\em Retrieves the SQLite database connection. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classDatabase_a348d7cc7a2483e59b65f8b6c76a801a9}{add\+User}} (const \mbox{\hyperlink{classUser}{User}} \&user)
+\begin{DoxyCompactList}\small\item\em Adds a new user to the database. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classDatabase_af612047cef9067e981a9f6495db29311}{verify\+User}} (const std\+::string \&username, const std\+::string \&password)
+\begin{DoxyCompactList}\small\item\em Verifies the user\textquotesingle{}s credentials by checking the username and password in the database. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{classDatabase_a888370715a8f14db84d8460fe05c9eba}{get\+User\+Id}} (const std\+::string \&username)
+\begin{DoxyCompactList}\small\item\em Retrieves the user ID for a given username from the database. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{classDatabase_a545166b151472bf20ac175090d58b224}{create\+Deck}} (int user\+Id, const std\+::string \&deck\+Name)
+\begin{DoxyCompactList}\small\item\em Creates a new deck for a specified user in the database. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classDatabase_a2b64b4ec5a0138d0c82c59d88b07ae1d}{list\+Decks}} (int user\+Id)
+\begin{DoxyCompactList}\small\item\em Lists all decks for a given user. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classDatabase_ae9544f9473548fcca9560d7420d07ad1}{has\+Users}} ()
+\begin{DoxyCompactList}\small\item\em Checks if there are any users in the database. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classDatabase_aa9d5570938a28e0207ddfd1d4f741b5a}{start\+Study\+Session}} (int user\+Id, int deck\+Id)
+\begin{DoxyCompactList}\small\item\em Starts a study session for a given user and deck. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classDatabase_aebf0385f1dc50e3834a88da9348fc15b}{list\+Study\+Sessions}} (int user\+Id)
+\begin{DoxyCompactList}\small\item\em Lists the active study sessions for a given user. \end{DoxyCompactList}\item 
+std\+::vector$<$ std\+::tuple$<$ int, std\+::string, std\+::string $>$ $>$ \mbox{\hyperlink{classDatabase_afee2b3b34ed5a650974b10be04c7c849}{get\+Due\+Cards}} (int user\+Id, int deck\+Id)
+\begin{DoxyCompactList}\small\item\em Retrieves the due cards for a specific user and deck. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classDatabase_a87038c51b55a03513ec2135a23ffd834}{update\+Card\+Progress}} (int user\+Id, int card\+Id, int interval, double ease\+Factor, int repetitions, int lapses)
+\begin{DoxyCompactList}\small\item\em Updates the progress of a card in the database. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classDatabase_a10d82d255d65c824478768d79e5438cc}{user\+Owns\+Deck}} (int user\+Id, int deck\+Id)
+\begin{DoxyCompactList}\small\item\em Checks if a user owns a specific deck. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classDatabase_a888f80cd167cf8e22fd096832bff71c6}{delete\+Deck}} (int deck\+Id)
+\begin{DoxyCompactList}\small\item\em Deletes a deck and all associated cards from the database. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classDatabase_a492b545b75936c3e306a9ddac9994618}{add\+Card}} (int deck\+Id, const std\+::string \&question, const std\+::string \&answer)
+\begin{DoxyCompactList}\small\item\em Adds a new card to the database. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classDatabase_a1529d2a5b54b3ec9b67755404484a0c8}{delete\+Card}} (int card\+Id)
+\begin{DoxyCompactList}\small\item\em Deletes a card from the database. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classDatabase_a2d4cf4b1991178843243ac583754d9b2}{edit\+Card}} (int card\+Id, const std\+::string \&question, const std\+::string \&answer)
+\begin{DoxyCompactList}\small\item\em Edits a card in the database with the given card ID. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classDatabase_a9c47498efd6b1d895b277f7ad06c732b}{list\+Cards}} (int deck\+Id)
+\begin{DoxyCompactList}\small\item\em Lists all cards in a specified deck. \end{DoxyCompactList}\item 
+time\+\_\+t \mbox{\hyperlink{classDatabase_af607d84941625fbdf37bafc0ed2ad8c5}{get\+Next\+Review\+Date}} (int deck\+Id)
+\begin{DoxyCompactList}\small\item\em Retrieves the next review date for a given deck. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classDatabase_a898a59d7c815560616e22345b7a982a7}\label{classDatabase_a898a59d7c815560616e22345b7a982a7}} 
+class {\bfseries Database\+Initializer}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Manages the SQLite database connection and provides methods for user, deck, card, and study session management. 
+
+The \mbox{\hyperlink{classDatabase}{Database}} class is responsible for connecting to an SQLite database and providing various methods to manage users, decks, cards, and study sessions. It also includes methods for spaced repetition and card progress updates.
+
+\begin{DoxyNote}{Note}
+This class requires the SQLite3 library. 
+\end{DoxyNote}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classDatabase_ac83c760a516356a6c34d9bb24f5a8801}\label{classDatabase_ac83c760a516356a6c34d9bb24f5a8801}} 
+\index{Database@{Database}!Database@{Database}}
+\index{Database@{Database}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{Database()}{Database()}}
+{\footnotesize\ttfamily Database\+::\+Database (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{db\+\_\+name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+Constructs a \mbox{\hyperlink{classDatabase}{Database}} object and opens a connection to the specified SQLite database. 
+
+Constructs a \mbox{\hyperlink{classDatabase}{Database}} object with the specified database name.
+
+This constructor attempts to open a connection to the SQLite database specified by {\ttfamily db\+\_\+name}. If the database cannot be opened, an error message is printed to the standard error stream. If the database is opened successfully, it checks whether the database is initialized. If the database is not initialized, it initializes the database.
+
+
+\begin{DoxyParams}{Parameters}
+{\em db\+\_\+name} & The name of the SQLite database file.\\
+\hline
+{\em db\+\_\+name} & The name of the database to connect to. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classDatabase_a84d399a2ad58d69daab9b05330e1316d}\label{classDatabase_a84d399a2ad58d69daab9b05330e1316d}} 
+\index{Database@{Database}!````~Database@{$\sim$Database}}
+\index{````~Database@{$\sim$Database}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{$\sim$Database()}{~Database()}}
+{\footnotesize\ttfamily Database\+::$\sim$\+Database (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Destructor for the \mbox{\hyperlink{classDatabase}{Database}} class. 
+
+Destroys the \mbox{\hyperlink{classDatabase}{Database}} object and closes the database connection.
+
+This destructor is responsible for closing the SQLite database connection by calling sqlite3\+\_\+close on the database handle. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classDatabase_a492b545b75936c3e306a9ddac9994618}\label{classDatabase_a492b545b75936c3e306a9ddac9994618}} 
+\index{Database@{Database}!addCard@{addCard}}
+\index{addCard@{addCard}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{addCard()}{addCard()}}
+{\footnotesize\ttfamily bool Database\+::add\+Card (\begin{DoxyParamCaption}\item[{int}]{deck\+Id,  }\item[{const std\+::string \&}]{question,  }\item[{const std\+::string \&}]{answer }\end{DoxyParamCaption})}
+
+
+
+Adds a new card to the database. 
+
+Adds a new card to a deck.
+
+This function inserts a new card into the \textquotesingle{}cards\textquotesingle{} table with the specified deck ID, question, answer, and the current timestamp as the due date.
+
+
+\begin{DoxyParams}{Parameters}
+{\em deck\+Id} & The ID of the deck to which the card belongs. \\
+\hline
+{\em question} & The question text of the card. \\
+\hline
+{\em answer} & The answer text of the card. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the card was added successfully, false otherwise.
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em deck\+Id} & The ID of the deck. \\
+\hline
+{\em question} & The question of the card. \\
+\hline
+{\em answer} & The answer of the card. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool True if the card was added successfully, false otherwise. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classDatabase_a348d7cc7a2483e59b65f8b6c76a801a9}\label{classDatabase_a348d7cc7a2483e59b65f8b6c76a801a9}} 
+\index{Database@{Database}!addUser@{addUser}}
+\index{addUser@{addUser}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{addUser()}{addUser()}}
+{\footnotesize\ttfamily bool Database\+::add\+User (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classUser}{User}} \&}]{user }\end{DoxyParamCaption})}
+
+
+
+Adds a new user to the database. 
+
+This function attempts to insert a new user into the \textquotesingle{}users\textquotesingle{} table in the database. It binds the username and password from the provided \mbox{\hyperlink{classUser}{User}} object to the SQL statement and executes it. If the insertion is successful, the function returns true. If the user already exists or any other error occurs, it returns false and logs the error.
+
+
+\begin{DoxyParams}{Parameters}
+{\em user} & The \mbox{\hyperlink{classUser}{User}} object containing the username and password to be added. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the user was successfully added to the database. 
+
+false if there was an error adding the user to the database.
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em user} & The user object containing user details. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool True if the user was added successfully, false otherwise. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classDatabase_a545166b151472bf20ac175090d58b224}\label{classDatabase_a545166b151472bf20ac175090d58b224}} 
+\index{Database@{Database}!createDeck@{createDeck}}
+\index{createDeck@{createDeck}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{createDeck()}{createDeck()}}
+{\footnotesize\ttfamily int Database\+::create\+Deck (\begin{DoxyParamCaption}\item[{int}]{user\+Id,  }\item[{const std\+::string \&}]{deck\+Name }\end{DoxyParamCaption})}
+
+
+
+Creates a new deck for a specified user in the database. 
+
+Creates a new deck for a user.
+
+This function inserts a new deck into the \textquotesingle{}decks\textquotesingle{} table with the given user ID and deck name. It returns the ID of the newly created deck.
+
+
+\begin{DoxyParams}{Parameters}
+{\em user\+Id} & The ID of the user who owns the deck. \\
+\hline
+{\em deck\+Name} & The name of the deck to be created. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The ID of the newly created deck, or -\/1 if an error occurred.
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em user\+Id} & The ID of the user. \\
+\hline
+{\em deck\+Name} & The name of the deck. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int The ID of the created deck. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classDatabase_a1529d2a5b54b3ec9b67755404484a0c8}\label{classDatabase_a1529d2a5b54b3ec9b67755404484a0c8}} 
+\index{Database@{Database}!deleteCard@{deleteCard}}
+\index{deleteCard@{deleteCard}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{deleteCard()}{deleteCard()}}
+{\footnotesize\ttfamily bool Database\+::delete\+Card (\begin{DoxyParamCaption}\item[{int}]{card\+Id }\end{DoxyParamCaption})}
+
+
+
+Deletes a card from the database. 
+
+This function deletes a card from the \textquotesingle{}cards\textquotesingle{} table in the database based on the provided card ID. It prepares an SQL DELETE statement, binds the card ID to the statement, and executes it. If the deletion is successful, it returns true; otherwise, it returns false and logs an error message.
+
+
+\begin{DoxyParams}{Parameters}
+{\em card\+Id} & The ID of the card to be deleted. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the card was deleted successfully, false otherwise.
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em card\+Id} & The ID of the card to delete. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool True if the card was deleted successfully, false otherwise. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classDatabase_a888f80cd167cf8e22fd096832bff71c6}\label{classDatabase_a888f80cd167cf8e22fd096832bff71c6}} 
+\index{Database@{Database}!deleteDeck@{deleteDeck}}
+\index{deleteDeck@{deleteDeck}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{deleteDeck()}{deleteDeck()}}
+{\footnotesize\ttfamily void Database\+::delete\+Deck (\begin{DoxyParamCaption}\item[{int}]{deck\+Id }\end{DoxyParamCaption})}
+
+
+
+Deletes a deck and all associated cards from the database. 
+
+Deletes a deck from the database.
+
+This function deletes a deck from the \textquotesingle{}decks\textquotesingle{} table and all cards associated with that deck from the \textquotesingle{}cards\textquotesingle{} table in the database.
+
+
+\begin{DoxyParams}{Parameters}
+{\em deck\+Id} & The ID of the deck to be deleted.\\
+\hline
+\end{DoxyParams}
+The function prepares and executes an SQL statement to delete the deck and its associated cards. If the SQL statement is successfully prepared and executed, a success message is printed to the standard output. If there is an error during preparation or execution, an error message is printed to the standard error output.
+
+
+\begin{DoxyParams}{Parameters}
+{\em deck\+Id} & The ID of the deck to delete. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classDatabase_a2d4cf4b1991178843243ac583754d9b2}\label{classDatabase_a2d4cf4b1991178843243ac583754d9b2}} 
+\index{Database@{Database}!editCard@{editCard}}
+\index{editCard@{editCard}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{editCard()}{editCard()}}
+{\footnotesize\ttfamily bool Database\+::edit\+Card (\begin{DoxyParamCaption}\item[{int}]{card\+Id,  }\item[{const std\+::string \&}]{question,  }\item[{const std\+::string \&}]{answer }\end{DoxyParamCaption})}
+
+
+
+Edits a card in the database with the given card ID. 
+
+Edits an existing card in the database.
+
+This function updates the question and answer fields of a card in the database identified by the specified card ID. It prepares an SQL statement to update the card\textquotesingle{}s information and executes it.
+
+
+\begin{DoxyParams}{Parameters}
+{\em card\+Id} & The ID of the card to be edited. \\
+\hline
+{\em question} & The new question text for the card. \\
+\hline
+{\em answer} & The new answer text for the card. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the card was successfully updated, false otherwise.
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em card\+Id} & The ID of the card to edit. \\
+\hline
+{\em question} & The new question of the card. \\
+\hline
+{\em answer} & The new answer of the card. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool True if the card was edited successfully, false otherwise. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classDatabase_a4e924ad7804a83b93270f312e688c475}\label{classDatabase_a4e924ad7804a83b93270f312e688c475}} 
+\index{Database@{Database}!getDb@{getDb}}
+\index{getDb@{getDb}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{getDb()}{getDb()}}
+{\footnotesize\ttfamily sqlite3 $\ast$ Database\+::get\+Db (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Retrieves the SQLite database connection. 
+
+\begin{DoxyReturn}{Returns}
+sqlite3$\ast$ Pointer to the SQLite database connection. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classDatabase_afee2b3b34ed5a650974b10be04c7c849}\label{classDatabase_afee2b3b34ed5a650974b10be04c7c849}} 
+\index{Database@{Database}!getDueCards@{getDueCards}}
+\index{getDueCards@{getDueCards}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{getDueCards()}{getDueCards()}}
+{\footnotesize\ttfamily std\+::vector$<$ std\+::tuple$<$ int, std\+::string, std\+::string $>$ $>$ Database\+::get\+Due\+Cards (\begin{DoxyParamCaption}\item[{int}]{user\+Id,  }\item[{int}]{deck\+Id }\end{DoxyParamCaption})}
+
+
+
+Retrieves the due cards for a specific user and deck. 
+
+This function queries the database to find all cards that are due for review based on the current time. It returns a vector of tuples, where each tuple contains the card ID, question, and answer.
+
+
+\begin{DoxyParams}{Parameters}
+{\em user\+Id} & The ID of the user. \\
+\hline
+{\em deck\+Id} & The ID of the deck. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A vector of tuples, each containing the card ID, question, and answer of the due cards. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classDatabase_af607d84941625fbdf37bafc0ed2ad8c5}\label{classDatabase_af607d84941625fbdf37bafc0ed2ad8c5}} 
+\index{Database@{Database}!getNextReviewDate@{getNextReviewDate}}
+\index{getNextReviewDate@{getNextReviewDate}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{getNextReviewDate()}{getNextReviewDate()}}
+{\footnotesize\ttfamily time\+\_\+t Database\+::get\+Next\+Review\+Date (\begin{DoxyParamCaption}\item[{int}]{deck\+Id }\end{DoxyParamCaption})}
+
+
+
+Retrieves the next review date for a given deck. 
+
+Retrieves the next review date for a deck.
+
+This function queries the database to find the minimum due date of cards in the specified deck. It returns the earliest due date as a time\+\_\+t value.
+
+
+\begin{DoxyParams}{Parameters}
+{\em deck\+Id} & The ID of the deck for which to retrieve the next review date. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The next review date as a time\+\_\+t value. If no cards are found, returns 0.
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em deck\+Id} & The ID of the deck. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+time\+\_\+t The next review date. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classDatabase_a888370715a8f14db84d8460fe05c9eba}\label{classDatabase_a888370715a8f14db84d8460fe05c9eba}} 
+\index{Database@{Database}!getUserId@{getUserId}}
+\index{getUserId@{getUserId}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{getUserId()}{getUserId()}}
+{\footnotesize\ttfamily int Database\+::get\+User\+Id (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{username }\end{DoxyParamCaption})}
+
+
+
+Retrieves the user ID for a given username from the database. 
+
+Retrieves the user ID for a given username.
+
+This function prepares and executes an SQL query to select the user ID from the users table where the username matches the provided input.
+
+
+\begin{DoxyParams}{Parameters}
+{\em username} & The username for which to retrieve the user ID. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The user ID associated with the given username, or -\/1 if the user is not found or if an error occurs during the query execution.
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em username} & The username of the user. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int The user ID. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classDatabase_ae9544f9473548fcca9560d7420d07ad1}\label{classDatabase_ae9544f9473548fcca9560d7420d07ad1}} 
+\index{Database@{Database}!hasUsers@{hasUsers}}
+\index{hasUsers@{hasUsers}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{hasUsers()}{hasUsers()}}
+{\footnotesize\ttfamily bool Database\+::has\+Users (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Checks if there are any users in the database. 
+
+This function executes a SQL query to count the number of rows in the \textquotesingle{}users\textquotesingle{} table. It returns true if there is at least one user, and false otherwise.
+
+\begin{DoxyReturn}{Returns}
+true if there is at least one user in the database, false otherwise.
+
+bool True if there are users, false otherwise. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classDatabase_a9c47498efd6b1d895b277f7ad06c732b}\label{classDatabase_a9c47498efd6b1d895b277f7ad06c732b}} 
+\index{Database@{Database}!listCards@{listCards}}
+\index{listCards@{listCards}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{listCards()}{listCards()}}
+{\footnotesize\ttfamily void Database\+::list\+Cards (\begin{DoxyParamCaption}\item[{int}]{deck\+Id }\end{DoxyParamCaption})}
+
+
+
+Lists all cards in a specified deck. 
+
+Lists all cards in a deck.
+
+This function retrieves and prints all cards from the database that belong to the specified deck. Each card\textquotesingle{}s ID, question, and answer are printed to the standard output.
+
+
+\begin{DoxyParams}{Parameters}
+{\em deck\+Id} & The ID of the deck whose cards are to be listed.\\
+\hline
+{\em deck\+Id} & The ID of the deck. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classDatabase_a2b64b4ec5a0138d0c82c59d88b07ae1d}\label{classDatabase_a2b64b4ec5a0138d0c82c59d88b07ae1d}} 
+\index{Database@{Database}!listDecks@{listDecks}}
+\index{listDecks@{listDecks}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{listDecks()}{listDecks()}}
+{\footnotesize\ttfamily void Database\+::list\+Decks (\begin{DoxyParamCaption}\item[{int}]{user\+Id }\end{DoxyParamCaption})}
+
+
+
+Lists all decks for a given user. 
+
+Lists all decks for a user.
+
+This function queries the database for all decks associated with the specified user ID and prints the deck ID and name for each deck.
+
+
+\begin{DoxyParams}{Parameters}
+{\em user\+Id} & The ID of the user whose decks are to be listed.\\
+\hline
+{\em user\+Id} & The ID of the user. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classDatabase_aebf0385f1dc50e3834a88da9348fc15b}\label{classDatabase_aebf0385f1dc50e3834a88da9348fc15b}} 
+\index{Database@{Database}!listStudySessions@{listStudySessions}}
+\index{listStudySessions@{listStudySessions}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{listStudySessions()}{listStudySessions()}}
+{\footnotesize\ttfamily void Database\+::list\+Study\+Sessions (\begin{DoxyParamCaption}\item[{int}]{user\+Id }\end{DoxyParamCaption})}
+
+
+
+Lists the active study sessions for a given user. 
+
+Lists all study sessions for a user.
+
+This function queries the database for all active study sessions associated with the specified user ID. It retrieves the session ID and the name of the deck associated with each study session and prints them to the console.
+
+
+\begin{DoxyParams}{Parameters}
+{\em user\+Id} & The ID of the user whose study sessions are to be listed.\\
+\hline
+{\em user\+Id} & The ID of the user. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classDatabase_aa9d5570938a28e0207ddfd1d4f741b5a}\label{classDatabase_aa9d5570938a28e0207ddfd1d4f741b5a}} 
+\index{Database@{Database}!startStudySession@{startStudySession}}
+\index{startStudySession@{startStudySession}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{startStudySession()}{startStudySession()}}
+{\footnotesize\ttfamily void Database\+::start\+Study\+Session (\begin{DoxyParamCaption}\item[{int}]{user\+Id,  }\item[{int}]{deck\+Id }\end{DoxyParamCaption})}
+
+
+
+Starts a study session for a given user and deck. 
+
+Starts a study session for a user and deck.
+
+This function inserts a new record into the {\ttfamily study\+\_\+sessions} table with the provided user ID and deck ID, indicating the start of a study session.
+
+
+\begin{DoxyParams}{Parameters}
+{\em user\+Id} & The ID of the user starting the study session. \\
+\hline
+{\em deck\+Id} & The ID of the deck being studied.\\
+\hline
+{\em user\+Id} & The ID of the user. \\
+\hline
+{\em deck\+Id} & The ID of the deck. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classDatabase_a87038c51b55a03513ec2135a23ffd834}\label{classDatabase_a87038c51b55a03513ec2135a23ffd834}} 
+\index{Database@{Database}!updateCardProgress@{updateCardProgress}}
+\index{updateCardProgress@{updateCardProgress}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{updateCardProgress()}{updateCardProgress()}}
+{\footnotesize\ttfamily void Database\+::update\+Card\+Progress (\begin{DoxyParamCaption}\item[{int}]{user\+Id,  }\item[{int}]{card\+Id,  }\item[{int}]{interval,  }\item[{double}]{ease\+Factor,  }\item[{int}]{repetitions,  }\item[{int}]{lapses }\end{DoxyParamCaption})}
+
+
+
+Updates the progress of a card in the database. 
+
+Updates the progress of a card for spaced repetition.
+
+This function updates the interval, ease factor, repetitions, lapses, and due date of a card identified by its card\+Id for a specific user identified by user\+Id.
+
+
+\begin{DoxyParams}{Parameters}
+{\em user\+Id} & The ID of the user whose card progress is being updated. \\
+\hline
+{\em card\+Id} & The ID of the card to update. \\
+\hline
+{\em interval} & The new interval (in days) for the card. \\
+\hline
+{\em ease\+Factor} & The new ease factor for the card. \\
+\hline
+{\em repetitions} & The number of times the card has been reviewed successfully. \\
+\hline
+{\em lapses} & The number of times the card has been forgotten.\\
+\hline
+{\em user\+Id} & The ID of the user. \\
+\hline
+{\em card\+Id} & The ID of the card. \\
+\hline
+{\em interval} & The interval until the next review. \\
+\hline
+{\em ease\+Factor} & The ease factor for the card. \\
+\hline
+{\em repetitions} & The number of repetitions. \\
+\hline
+{\em lapses} & The number of lapses. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classDatabase_a10d82d255d65c824478768d79e5438cc}\label{classDatabase_a10d82d255d65c824478768d79e5438cc}} 
+\index{Database@{Database}!userOwnsDeck@{userOwnsDeck}}
+\index{userOwnsDeck@{userOwnsDeck}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{userOwnsDeck()}{userOwnsDeck()}}
+{\footnotesize\ttfamily bool Database\+::user\+Owns\+Deck (\begin{DoxyParamCaption}\item[{int}]{user\+Id,  }\item[{int}]{deck\+Id }\end{DoxyParamCaption})}
+
+
+
+Checks if a user owns a specific deck. 
+
+This function queries the database to determine if a deck with the given deck\+Id is owned by the user with the given user\+Id.
+
+
+\begin{DoxyParams}{Parameters}
+{\em user\+Id} & The ID of the user. \\
+\hline
+{\em deck\+Id} & The ID of the deck. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the user owns the deck, false otherwise.
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em user\+Id} & The ID of the user. \\
+\hline
+{\em deck\+Id} & The ID of the deck. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool True if the user owns the deck, false otherwise. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classDatabase_af612047cef9067e981a9f6495db29311}\label{classDatabase_af612047cef9067e981a9f6495db29311}} 
+\index{Database@{Database}!verifyUser@{verifyUser}}
+\index{verifyUser@{verifyUser}!Database@{Database}}
+\doxysubsubsection{\texorpdfstring{verifyUser()}{verifyUser()}}
+{\footnotesize\ttfamily bool Database\+::verify\+User (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{username,  }\item[{const std\+::string \&}]{password }\end{DoxyParamCaption})}
+
+
+
+Verifies the user\textquotesingle{}s credentials by checking the username and password in the database. 
+
+Verifies a user\textquotesingle{}s credentials.
+
+This function prepares and executes an SQL statement to check if a user with the given username and password exists in the database. It returns true if a matching user is found, otherwise false.
+
+
+\begin{DoxyParams}{Parameters}
+{\em username} & The username of the user to verify. \\
+\hline
+{\em password} & The password of the user to verify. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the user exists and the credentials are correct, false otherwise.
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em username} & The username of the user. \\
+\hline
+{\em password} & The password of the user. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool True if the credentials are correct, false otherwise. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/core/database.\+h\item 
+src/core/database.\+cpp\end{DoxyCompactItemize}
