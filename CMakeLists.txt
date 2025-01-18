@@ -36,19 +36,26 @@ pkg_check_modules(WAYLAND REQUIRED wayland-client wayland-cursor wayland-egl xkb
 target_link_libraries(${PROJECT_NAME} PRIVATE SQLite::SQLite3 ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${WAYLAND_LIBRARIES_LDFLAGS} -lpthread -ldl)
 target_include_directories(${PROJECT_NAME} PRIVATE src ${WAYLAND_INCLUDE_DIRS})
 
-# Enable testing
 enable_testing()
 
-# Add Catch2
 include(FetchContent)
 FetchContent_Declare(
     catch2
     GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-    GIT_TAG v2.13.7 # or the latest version
+    GIT_TAG v3.8.0
 )
 FetchContent_MakeAvailable(catch2)
 list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/contrib)
 include(Catch)
+
+FetchContent_Declare(
+    json
+    GIT_REPOSITORY https://github.com/nlohmann/json.git
+    GIT_TAG v3.11.3
+)
+FetchContent_MakeAvailable(json)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json)
 
 # Test executable
 add_executable(runTests
@@ -63,5 +70,5 @@ add_executable(runTests
 )
 
 target_include_directories(runTests PRIVATE ${CMAKE_SOURCE_DIR}/src)
-target_link_libraries(runTests PRIVATE SQLite::SQLite3 ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${WAYLAND_LIBRARIES_LDFLAGS} Catch2::Catch2 -lpthread -ldl)
+target_link_libraries(runTests PRIVATE SQLite::SQLite3 ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${WAYLAND_LIBRARIES_LDFLAGS} Catch2::Catch2 -lpthread -ldl nlohmann_json::nlohmann_json)
 add_test(NAME runTests COMMAND runTests)

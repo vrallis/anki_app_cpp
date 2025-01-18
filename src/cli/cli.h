@@ -3,6 +3,7 @@
 
 #include "core/app_logic.h"
 #include "sound/sound_manager.h"
+#include <nlohmann/json.hpp>
 
 class CLI {
 public:
@@ -18,10 +19,12 @@ private:
     void manageCards(int deckId);
     void handleStudySession(int userId);
     void checkNextReviewDate(int deckId);
+    void loadConfig();
 
     AppLogic& app;
     SoundManager soundManager;
     static bool running;
+    bool enableSounds;
 };
 
 #endif // CLI_H

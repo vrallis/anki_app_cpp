@@ -4,34 +4,41 @@
 #include <iostream>
 #include <string>
 #include <filesystem>
+#include <fstream>
 #include "study_session.h"
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
 
 bool CLI::running = true;
 
-CLI::CLI(AppLogic& app) : app(app) {
-    // Print the current working directory
+CLI::CLI(AppLogic& app) : app(app), enableSounds(true) {
+    loadConfig();
+    // DEBUG
     std::cout << "Current working directory: " << std::filesystem::current_path() << std::endl;
 
-    // // Check if the sound files exist
-    // if (!std::filesystem::exists("../src/assets/sounds/click.wav")) {
-    //     std::cerr << "File not found: ../src/assets/sounds/click.wav" << std::endl;
-    // }
-    // if (!std::filesystem::exists("../src/assets/sounds/correct.wav")) {
-    //     std::cerr << "File not found: ../src/assets/sounds/correct.wav" << std::endl;
-    // }
-    // if (!std::filesystem::exists("../src/assets/sounds/incorrect.wav")) {
-    //     std::cerr << "File not found: ../src/assets/sounds/incorrect.wav" << std::endl;
-    // }
+    if (enableSounds) {
+        if (!soundManager.loadSound("src/assets/sounds/click.wav", "click")) {
+            std::cerr << "Error loading click sound." << std::endl;
+        }
+        if (!soundManager.loadSound("src/assets/sounds/correct.wav", "correct")) {
+            std::cerr << "Error loading correct sound." << std::endl;
+        }
+        if (!soundManager.loadSound("src/assets/sounds/incorrect.wav", "incorrect")) {
+            std::cerr << "Error loading incorrect sound." << std::endl;
+        }
+    }
+}
 
-    // if (!soundManager.loadSound("../src/assets/sounds/click.wav", "click")) {
-    //     std::cerr << "Error loading click sound." << std::endl;
-    // }
-    // if (!soundManager.loadSound("../src/assets/sounds/correct.wav", "correct")) {
-    //     std::cerr << "Error loading correct sound." << std::endl;
-    // }
-    // if (!soundManager.loadSound("../src/assets/sounds/incorrect.wav", "incorrect")) {
-    //     std::cerr << "Error loading incorrect sound." << std::endl;
-    // }
+void CLI::loadConfig() {
+    std::ifstream configFile("config.json");
+    if (configFile.is_open()) {
+        json config;
+        configFile >> config;
+        enableSounds = config.value("enable_sounds", true);
+    } else {
+        std::cerr << "Could not open config file. Using default settings." << std::endl;
+    }
 }
 
 void CLI::run() {
@@ -55,7 +62,9 @@ void CLI::mainMenu() {
         return;
     }
 
-    soundManager.playSound("click");
+    if (enableSounds) {
+        soundManager.playSound("click");
+    }
 
     switch (choice) {
     case 1:
@@ -119,7 +128,9 @@ void CLI::userMenu(int userId) {
             continue;
         }
 
-        soundManager.playSound("click");
+        if (enableSounds) {
+            soundManager.playSound("click");
+        }
 
         switch (choice) {
         case 1:
@@ -156,7 +167,9 @@ void CLI::deckMenu(int userId) {
             continue;
         }
 
-        soundManager.playSound("click");
+        if (enableSounds) {
+            soundManager.playSound("click");
+        }
 
         switch (choice) {
         case 1: {
@@ -236,7 +249,9 @@ void CLI::manageCards(int deckId) {
             continue;
         }
 
-        soundManager.playSound("click");
+        if (enableSounds) {
+            soundManager.playSound("click");
+        }
 
         switch (choice) {
         case 1: {
