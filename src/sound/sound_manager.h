@@ -6,6 +6,13 @@
 #include <string>
 #include <map>
 
+/**
+ * @class SoundManager
+ * @brief Manages the loading and playing of sound effects.
+ *
+ * The SoundManager class provides functionality to load sound effects from files
+ * and play them using their associated names.
+ */
 class SoundManager {
 public:
     SoundManager();

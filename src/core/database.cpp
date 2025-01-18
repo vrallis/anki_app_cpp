@@ -4,6 +4,16 @@
 #include "database_initializer.h"
 #include <ctime>
 
+/**
+ * @brief Constructs a Database object and opens a connection to the specified SQLite database.
+ *
+ * This constructor attempts to open a connection to the SQLite database specified by `db_name`.
+ * If the database cannot be opened, an error message is printed to the standard error stream.
+ * If the database is opened successfully, it checks whether the database is initialized.
+ * If the database is not initialized, it initializes the database.
+ *
+ * @param db_name The name of the SQLite database file.
+ */
 Database::Database(const std::string& db_name) {
     if (sqlite3_open(db_name.c_str(), &db)) {
         std::cerr << "Can't open database: " << sqlite3_errmsg(db) << std::endl;
@@ -18,10 +28,28 @@ Database::Database(const std::string& db_name) {
 }
 
 
+/**
+ * @brief Destructor for the Database class.
+ *
+ * This destructor is responsible for closing the SQLite database connection
+ * by calling sqlite3_close on the database handle.
+ */
 Database::~Database() {
     sqlite3_close(db);
 }
 
+/**
+ * @brief Adds a new user to the database.
+ * 
+ * This function attempts to insert a new user into the 'users' table in the database.
+ * It binds the username and password from the provided User object to the SQL statement
+ * and executes it. If the insertion is successful, the function returns true. If the
+ * user already exists or any other error occurs, it returns false and logs the error.
+ * 
+ * @param user The User object containing the username and password to be added.
+ * @return true if the user was successfully added to the database.
+ * @return false if there was an error adding the user to the database.
+ */
 bool Database::addUser(const User& user) {
     const char* sql = "INSERT INTO users (username, password) VALUES (?, ?);";
     sqlite3_stmt* stmt;
@@ -55,6 +83,17 @@ bool Database::addUser(const User& user) {
 }
 
 
+/**
+ * @brief Verifies the user's credentials by checking the username and password in the database.
+ *
+ * This function prepares and executes an SQL statement to check if a user with the given
+ * username and password exists in the database. It returns true if a matching user is found,
+ * otherwise false.
+ *
+ * @param username The username of the user to verify.
+ * @param password The password of the user to verify.
+ * @return true if the user exists and the credentials are correct, false otherwise.
+ */
 bool Database::verifyUser(const std::string& username, const std::string& password) {
     const char* sql = "SELECT id FROM users WHERE username = ? AND password = ?;";
     sqlite3_stmt* stmt;
@@ -67,6 +106,16 @@ bool Database::verifyUser(const std::string& username, const std::string& passwo
     return success;
 }
 
+/**
+ * @brief Creates a new deck for a specified user in the database.
+ *
+ * This function inserts a new deck into the 'decks' table with the given user ID and deck name.
+ * It returns the ID of the newly created deck.
+ *
+ * @param userId The ID of the user who owns the deck.
+ * @param deckName The name of the deck to be created.
+ * @return The ID of the newly created deck, or -1 if an error occurred.
+ */
 int Database::createDeck(int userId, const std::string& deckName) {
     const char* sql = "INSERT INTO decks (user_id, name) VALUES (?, ?) RETURNING id;";
     sqlite3_stmt* stmt;
@@ -92,6 +141,14 @@ int Database::createDeck(int userId, const std::string& deckName) {
 
 
 
+/**
+ * @brief Lists all decks for a given user.
+ * 
+ * This function queries the database for all decks associated with the specified user ID
+ * and prints the deck ID and name for each deck.
+ * 
+ * @param userId The ID of the user whose decks are to be listed.
+ */
 void Database::listDecks(int userId) {
     const char* sql = "SELECT id, name FROM decks WHERE user_id = ?;";
     sqlite3_stmt* stmt;
@@ -107,6 +164,14 @@ void Database::listDecks(int userId) {
     sqlite3_finalize(stmt);
 }
 
+/**
+ * @brief Checks if there are any users in the database.
+ *
+ * This function executes a SQL query to count the number of rows in the 'users' table.
+ * It returns true if there is at least one user, and false otherwise.
+ *
+ * @return true if there is at least one user in the database, false otherwise.
+ */
 bool Database::hasUsers() {
     const char* sql = "SELECT COUNT(*) FROM users;";
     sqlite3_stmt* stmt;
@@ -121,6 +186,16 @@ bool Database::hasUsers() {
     return false;
 }
 
+/**
+ * @brief Executes an SQL statement on the database.
+ *
+ * This function executes the provided SQL statement on the database and prints
+ * a success message if the execution is successful. If there is an error during
+ * execution, it prints the error message.
+ *
+ * @param sql The SQL statement to be executed.
+ * @param successMessage The message to be printed if the SQL execution is successful.
+ */
 void Database::executeSQL(const char* sql, const std::string& successMessage) {
     char* errMsg = nullptr;
 
@@ -132,6 +207,15 @@ void Database::executeSQL(const char* sql, const std::string& successMessage) {
     }
 }
 
+/**
+ * @brief Starts a study session for a given user and deck.
+ *
+ * This function inserts a new record into the `study_sessions` table with the provided
+ * user ID and deck ID, indicating the start of a study session.
+ *
+ * @param userId The ID of the user starting the study session.
+ * @param deckId The ID of the deck being studied.
+ */
 void Database::startStudySession(int userId, int deckId) {
     const char* sql = "INSERT INTO study_sessions (user_id, deck_id) VALUES (?, ?);";
     sqlite3_stmt* stmt;
@@ -149,6 +233,14 @@ void Database::startStudySession(int userId, int deckId) {
 }
 
 
+/**
+ * @brief Lists the active study sessions for a given user.
+ *
+ * This function queries the database for all active study sessions associated with the specified user ID.
+ * It retrieves the session ID and the name of the deck associated with each study session and prints them to the console.
+ *
+ * @param userId The ID of the user whose study sessions are to be listed.
+ */
 void Database::listStudySessions(int userId) {
     const char* sql = "SELECT s.id, d.name FROM study_sessions s JOIN decks d ON s.deck_id = d.id WHERE s.user_id = ?;";
     sqlite3_stmt* stmt;
@@ -165,6 +257,16 @@ void Database::listStudySessions(int userId) {
     sqlite3_finalize(stmt);
 }
 
+/**
+ * @brief Checks if a user owns a specific deck.
+ *
+ * This function queries the database to determine if a deck with the given
+ * deckId is owned by the user with the given userId.
+ *
+ * @param userId The ID of the user.
+ * @param deckId The ID of the deck.
+ * @return true if the user owns the deck, false otherwise.
+ */
 bool Database::userOwnsDeck(int userId, int deckId) {
     const char* sql = "SELECT COUNT(*) FROM decks WHERE id = ? AND user_id = ?;";
     sqlite3_stmt* stmt;
@@ -185,6 +287,20 @@ bool Database::userOwnsDeck(int userId, int deckId) {
     return ownsDeck;
 }
 
+/**
+ * @brief Deletes a deck and all associated cards from the database.
+ * 
+ * This function deletes a deck from the 'decks' table and all cards associated 
+ * with that deck from the 'cards' table in the database.
+ * 
+ * @param deckId The ID of the deck to be deleted.
+ * 
+ * The function prepares and executes an SQL statement to delete the deck and 
+ * its associated cards. If the SQL statement is successfully prepared and 
+ * executed, a success message is printed to the standard output. If there is 
+ * an error during preparation or execution, an error message is printed to the 
+ * standard error output.
+ */
 void Database::deleteDeck(int deckId) {
     const char* sql = "DELETE FROM cards WHERE deck_id = ?; DELETE FROM decks WHERE id = ?;";
     sqlite3_stmt* stmt;
@@ -204,6 +320,17 @@ void Database::deleteDeck(int deckId) {
     }
 }
 
+/**
+ * @brief Adds a new card to the database.
+ * 
+ * This function inserts a new card into the 'cards' table with the specified deck ID, question, answer, 
+ * and the current timestamp as the due date.
+ * 
+ * @param deckId The ID of the deck to which the card belongs.
+ * @param question The question text of the card.
+ * @param answer The answer text of the card.
+ * @return true if the card was added successfully, false otherwise.
+ */
 bool Database::addCard(int deckId, const std::string& question, const std::string& answer) {
     const char* sql = "INSERT INTO cards (deck_id, question, answer, dueDate) VALUES (?, ?, ?, ?);";
     sqlite3_stmt* stmt;
@@ -229,6 +356,18 @@ bool Database::addCard(int deckId, const std::string& question, const std::strin
     return success;
 }
 
+/**
+ * @brief Deletes a card from the database.
+ * 
+ * This function deletes a card from the 'cards' table in the database
+ * based on the provided card ID. It prepares an SQL DELETE statement,
+ * binds the card ID to the statement, and executes it. If the deletion
+ * is successful, it returns true; otherwise, it returns false and logs
+ * an error message.
+ * 
+ * @param cardId The ID of the card to be deleted.
+ * @return true if the card was deleted successfully, false otherwise.
+ */
 bool Database::deleteCard(int cardId) {
     const char* sql = "DELETE FROM cards WHERE id = ?;";
     sqlite3_stmt* stmt;
@@ -251,6 +390,18 @@ bool Database::deleteCard(int cardId) {
     return success;
 }
 
+/**
+ * @brief Edits a card in the database with the given card ID.
+ *
+ * This function updates the question and answer fields of a card in the database
+ * identified by the specified card ID. It prepares an SQL statement to update
+ * the card's information and executes it.
+ *
+ * @param cardId The ID of the card to be edited.
+ * @param question The new question text for the card.
+ * @param answer The new answer text for the card.
+ * @return true if the card was successfully updated, false otherwise.
+ */
 bool Database::editCard(int cardId, const std::string& question, const std::string& answer) {
     const char* sql = "UPDATE cards SET question = ?, answer = ? WHERE id = ?;";
     sqlite3_stmt* stmt;
@@ -275,6 +426,14 @@ bool Database::editCard(int cardId, const std::string& question, const std::stri
     return success;
 }
 
+/**
+ * @brief Lists all cards in a specified deck.
+ *
+ * This function retrieves and prints all cards from the database that belong to the specified deck.
+ * Each card's ID, question, and answer are printed to the standard output.
+ *
+ * @param deckId The ID of the deck whose cards are to be listed.
+ */
 void Database::listCards(int deckId) {
     const char* sql = "SELECT id, question, answer FROM cards WHERE deck_id = ?;";
     sqlite3_stmt* stmt;
@@ -296,6 +455,19 @@ void Database::listCards(int deckId) {
     }
 }
 
+/**
+ * @brief Updates the progress of a card in the database.
+ *
+ * This function updates the interval, ease factor, repetitions, lapses, and due date
+ * of a card identified by its cardId for a specific user identified by userId.
+ *
+ * @param userId The ID of the user whose card progress is being updated.
+ * @param cardId The ID of the card to update.
+ * @param interval The new interval (in days) for the card.
+ * @param easeFactor The new ease factor for the card.
+ * @param repetitions The number of times the card has been reviewed successfully.
+ * @param lapses The number of times the card has been forgotten.
+ */
 void Database::updateCardProgress(int userId, int cardId, int interval, double easeFactor, int repetitions, int lapses) {
     const char* sql = "UPDATE cards SET interval = ?, easeFactor = ?, repetitions = ?, lapses = ?, dueDate = ? WHERE id = ?;";
     sqlite3_stmt* stmt;
@@ -323,6 +495,18 @@ void Database::updateCardProgress(int userId, int cardId, int interval, double e
     }
 }
 
+/**
+ * @brief Retrieves the due cards for a specific user and deck.
+ *
+ * This function queries the database to find all cards that are due for review
+ * based on the current time. It returns a vector of tuples, where each tuple
+ * contains the card ID, question, and answer.
+ *
+ * @param userId The ID of the user.
+ * @param deckId The ID of the deck.
+ * @return A vector of tuples, each containing the card ID, question, and answer
+ *         of the due cards.
+ */
 std::vector<std::tuple<int, std::string, std::string>> Database::getDueCards(int userId, int deckId) {
     const char* sql = "SELECT id, question, answer FROM cards WHERE deck_id = ? AND dueDate <= ?;";
     sqlite3_stmt* stmt;
@@ -347,6 +531,16 @@ std::vector<std::tuple<int, std::string, std::string>> Database::getDueCards(int
     return dueCards;
 }
 
+/**
+ * @brief Retrieves the user ID for a given username from the database.
+ *
+ * This function prepares and executes an SQL query to select the user ID
+ * from the users table where the username matches the provided input.
+ *
+ * @param username The username for which to retrieve the user ID.
+ * @return The user ID associated with the given username, or -1 if the user
+ *         is not found or if an error occurs during the query execution.
+ */
 int Database::getUserId(const std::string& username) {
     const char* sql = "SELECT id FROM users WHERE username = ?;";
     sqlite3_stmt* stmt;
@@ -366,6 +560,15 @@ int Database::getUserId(const std::string& username) {
     return userId;
 }
 
+/**
+ * @brief Retrieves the next review date for a given deck.
+ *
+ * This function queries the database to find the minimum due date of cards
+ * in the specified deck. It returns the earliest due date as a time_t value.
+ *
+ * @param deckId The ID of the deck for which to retrieve the next review date.
+ * @return The next review date as a time_t value. If no cards are found, returns 0.
+ */
 time_t Database::getNextReviewDate(int deckId) {
     const char* sql = "SELECT MIN(dueDate) FROM cards WHERE deck_id = ?;";
     sqlite3_stmt* stmt;
