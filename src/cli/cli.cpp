@@ -344,7 +344,7 @@ void CLI::deckMenu(int userId) {
  */
 void CLI::manageCards(int deckId) {
     while (running) {
-        std::cout << generateAsciiArt("Manage Cards") << std::endl;
+        std::cout << generateAsciiArt("Card Management") << std::endl;
         std::cout << "1. Add Card" << std::endl;
         std::cout << "2. Edit Card" << std::endl;
         std::cout << "3. Delete Card" << std::endl;
@@ -395,7 +395,7 @@ void CLI::manageCards(int deckId) {
             std::cout << "Enter card ID to delete: ";
             std::cin >> cardId;
             app.removeCard(cardId);
-            std::cout << "Card deleted successfully." << std::endl;
+            // std::cout << "Card deleted successfully." << std::endl;
             break;
         }
         case 4:

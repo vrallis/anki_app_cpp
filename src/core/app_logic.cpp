@@ -243,7 +243,7 @@ void AppLogic::studyDeck(int userId, int deckId) {
         } else {
             repetitions++;
             easeFactor += (0.1 - (3 - grade) * (0.08 + (3 - grade) * 0.02));
-            easeFactor = std::max(1.3, easeFactor); // drop factor need to not be infinite
+            easeFactor = std::max(1.3, easeFactor);
             interval *= easeFactor;
         }
 

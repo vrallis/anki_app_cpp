@@ -1,0 +1,85 @@
+@startuml
+
+!define RECTANGLE class
+
+RECTANGLE CLI {
+    - AppLogic& app
+    - SoundManager soundManager
+    - static bool running
+    - bool enableSounds
+    + CLI(AppLogic& app)
+    + void run()
+    + void mainMenu()
+    + void handleUserCreation()
+    + void handleLogin()
+    + void userMenu(int userId)
+    + void deckMenu(int userId)
+    + void manageCards(int deckId)
+    + void handleStudySession(int userId)
+    + void checkNextReviewDate(int deckId)
+    + void loadConfig()
+}
+
+RECTANGLE AppLogic {
+    - Database& db
+    - FileHandler fileHandler
+    + AppLogic(Database& db)
+    + bool addUser(const std::string& username, const std::string& password)
+    + bool verifyUser(const std::string& username, const std::string& password)
+    + void createDeck(int userId, const std::string& deckName)
+    + void listDecks(int userId)
+    + bool deleteDeck(int userId, int deckId)
+    + bool importDeck(int userId, const std::string& filePath)
+    + void addCard(int deckId, const std::string& question, const std::string& answer)
+    + void editCard(int cardId, const std::string& newQuestion, const std::string& newAnswer)
+    + void removeCard(int cardId)
+    + void listCards(int deckId)
+    + int getUserId(const std::string& username)
+    + void studyDeck(int userId, int deckId)
+    + std::vector<std::tuple<int, std::string, std::string>> getDueCards(int userId, int deckId)
+    + void updateCardProgress(int userId, int cardId, int grade)
+}
+
+RECTANGLE SoundManager {
+    + bool loadSound(const std::string& path, const std::string& name)
+    + void playSound(const std::string& name)
+}
+
+RECTANGLE FileHandler {
+    + static std::vector<std::pair<std::string, std::string>> importCards(const std::string& filePath)
+}
+
+RECTANGLE Database {
+    + void addUser(const std::string& username, const std::string& password)
+    + bool verifyUser(const std::string& username, const std::string& password)
+    + void createDeck(int userId, const std::string& deckName)
+    + void listDecks(int userId)
+    + bool deleteDeck(int userId, int deckId)
+    + void addCard(int deckId, const std::string& question, const std::string& answer)
+    + void editCard(int cardId, const std::string& newQuestion, const std::string& newAnswer)
+    + void removeCard(int cardId)
+    + void listCards(int deckId)
+    + int getUserId(const std::string& username)
+    + std::vector<std::tuple<int, std::string, std::string>> getDueCards(int userId, int deckId)
+    + void updateCardProgress(int userId, int cardId, int interval, double easeFactor, int repetitions, int lapses)
+}
+
+RECTANGLE StudySession {
+    - AppLogic& app
+    - SoundManager& soundManager
+    - int userId
+    - int deckId
+    + StudySession(AppLogic& app, SoundManager& soundManager, int userId, int deckId)
+    + void start()
+    + std::vector<std::tuple<int, std::string, std::string>> fetchDueCards()
+    + void reviewCard(int cardId, const std::string& question, const std::string& answer)
+}
+
+CLI --> AppLogic
+CLI --> SoundManager
+AppLogic --> Database
+AppLogic --> FileHandler
+AppLogic --> StudySession
+StudySession --> SoundManager
+
+@enduml

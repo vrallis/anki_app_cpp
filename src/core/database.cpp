@@ -473,7 +473,7 @@ void Database::updateCardProgress(int userId, int cardId, int interval, double e
     sqlite3_stmt* stmt;
     bool success = false;
 
-    int dueDate = std::time(nullptr) + interval * 24 * 60 * 60; // Calculate new due date
+    int dueDate = std::time(nullptr) + interval * 24 * 60 * 60; 
 
     if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) == SQLITE_OK) {
         sqlite3_bind_int(stmt, 1, interval);
@@ -514,7 +514,7 @@ std::vector<std::tuple<int, std::string, std::string>> Database::getDueCards(int
 
     if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) == SQLITE_OK) {
         sqlite3_bind_int(stmt, 1, deckId);
-        sqlite3_bind_int(stmt, 2, std::time(nullptr)); // Current time
+        sqlite3_bind_int(stmt, 2, std::time(nullptr));
 
         while (sqlite3_step(stmt) == SQLITE_ROW) {
             int cardId = sqlite3_column_int(stmt, 0);

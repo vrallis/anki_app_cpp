@@ -21,20 +21,17 @@ StudySession::StudySession(AppLogic& app, SoundManager& soundManager, int userId
  * Otherwise, it proceeds to review each due card by calling the reviewCard function.
  */
 void StudySession::start() {
-    // Check if the user owns the deck
     if (!app.doesUserOwnDeck(userId, deckId)) {
         std::cerr << "Error: You do not have access to this deck or it does not exist." << std::endl;
         return;
     }
 
-    // Fetch due cards
     auto dueCards = fetchDueCards();
     if (dueCards.empty()) {
         std::cout << "No cards are due for review in this deck." << std::endl;
         return;
     }
 
-    // Review each due card
     for (const auto& [cardId, question, answer] : dueCards) {
         reviewCard(cardId, question, answer);
     }
